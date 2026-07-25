@@ -1,0 +1,6 @@
+{
+  "name": "Portfolio Website",
+  "description": "A dark luxury editorial portfolio with a deep burgundy background, crimson accents, bold typography, and interactive customizable fields.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
