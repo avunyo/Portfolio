@@ -14,6 +14,7 @@ export default function Contact({ data }: ContactProps) {
   const linkedinUrl = data.linkedin.startsWith("http") 
     ? data.linkedin 
     : `https://linkedin.com/in/${data.linkedin}`;
+  const hasContactInfo = Boolean(data.email.trim() || data.instagram.trim() || data.linkedin.trim());
 
   return (
     <section
@@ -28,7 +29,7 @@ export default function Contact({ data }: ContactProps) {
         {/* Eyebrow Label */}
         <div className="flex items-center gap-3 mb-6 justify-center" id="contact-eyebrow">
           <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-brand-crimson-bright font-bold">
-            04 / TRANSACTION CHANNEL
+            04 / CONTACT
           </span>
           <div className="h-[1px] w-12 bg-brand-wine-light" />
         </div>
@@ -38,47 +39,49 @@ export default function Contact({ data }: ContactProps) {
           id="contact-title"
           className="font-syne font-extrabold text-[36px] sm:text-[48px] md:text-[64px] uppercase tracking-[-0.03em] text-brand-text-warm leading-[1.0] select-none"
         >
-          LET'S BUILD A DIGITAL LEGACY
+          LASS UNS REDEN
         </h2>
 
         {/* Subtitle */}
         <p 
           id="contact-subtitle"
-          className="font-sans font-light text-brand-text-muted mt-6 text-sm sm:text-base leading-relaxed max-w-xl text-center"
+          className="font-sans font-light text-brand-text-muted mt-6 text-xs sm:text-sm leading-[1.8] max-w-xl text-center"
         >
-          Currently accepting selective global branding audits, interactive commissions, and senior consulting engagements. Inquire directly or interface through established channels.
+          {hasContactInfo
+            ? "Du hast eine Frage, eine Idee oder möchtest einfach Hallo sagen? Schreib mir gern."
+            : "Meine Kontaktdaten ergänze ich bald. Schau gern wieder vorbei."}
         </p>
 
         {/* Three core social channel links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 w-full max-w-2xl" id="contact-channels-grid">
           
           {/* Email button */}
-          <a
+          {data.email.trim() && <a
             id="contact-channel-email"
             href={mailTo}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-none transition-all duration-300 hover:-translate-y-1 shadow-lg"
+            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-lg"
             style={{ borderRadius: "2px" }}
           >
             <div className="p-3 bg-brand-bg-deep border border-brand-wine-light lg:group-hover:border-brand-crimson transition-colors group-hover:text-brand-crimson-bright mb-3" style={{ borderRadius: "2px" }}>
               <Mail className="w-5 h-5 text-brand-crimson-bright" />
             </div>
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase mb-1">
-              DIRECT DISPATCH
+              E-MAIL
             </span>
             <span className="font-mono text-[10px] text-brand-text-muted truncate max-w-full">
               {data.email}
             </span>
-          </a>
+          </a>}
 
           {/* Instagram button */}
-          <a
+          {data.instagram.trim() && <a
             id="contact-channel-instagram"
             href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-none transition-all duration-300 hover:-translate-y-1 shadow-lg"
+            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-lg"
             style={{ borderRadius: "2px" }}
           >
             <div className="p-3 bg-brand-bg-deep border border-brand-wine-light lg:group-hover:border-brand-crimson transition-all group-hover:text-brand-crimson-bright mb-3" style={{ borderRadius: "2px" }}>
@@ -90,34 +93,34 @@ export default function Contact({ data }: ContactProps) {
             <span className="font-mono text-[10px] text-brand-text-muted">
               @{data.instagram.split("/").pop()}
             </span>
-          </a>
+          </a>}
 
           {/* LinkedIn button */}
-          <a
+          {data.linkedin.trim() && <a
             id="contact-channel-linkedin"
             href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-none transition-all duration-300 hover:-translate-y-1 shadow-lg"
+            className="group flex flex-col items-center justify-center p-6 border border-brand-wine-light/45 bg-brand-bg-dark/85 hover:border-brand-crimson-bright hover:bg-brand-wine-dark/15 tracking-wide text-brand-text-warm cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-lg"
             style={{ borderRadius: "2px" }}
           >
             <div className="p-3 bg-brand-bg-deep border border-brand-wine-light lg:group-hover:border-brand-crimson transition-all group-hover:text-brand-crimson-bright mb-3" style={{ borderRadius: "2px" }}>
               <Linkedin className="w-5 h-5 text-brand-crimson-bright" />
             </div>
             <span className="font-syne text-[11px] font-bold tracking-widest uppercase mb-1">
-              LINKEDIN NODE
+              LINKEDIN
             </span>
             <span className="font-mono text-[10px] text-brand-text-muted">
               /{data.linkedin.split("/").pop()}
             </span>
-          </a>
+          </a>}
 
         </div>
 
         {/* Secondary fast-ping feedback form or just quick contact trigger */}
         <div className="mt-14 inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-brand-text-muted" id="contact-operational-status">
           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-          COMMISSIONS ACTIVE FOR {new Date().getFullYear()} // LATENCY 12H
+          ICH FREUE MICH, VON DIR ZU HÖREN
         </div>
 
       </div>

@@ -27,31 +27,21 @@ export default function Customizer({
     });
   };
 
-  const handleNestedStatChange = (field: "years" | "projects" | "clients", value: number) => {
+  const handleInterestChange = (index: number, name: string) => {
+    const updatedInterests = [...data.interests];
+    updatedInterests[index] = { ...updatedInterests[index], name };
     onChange({
       ...data,
-      stats: {
-        ...data.stats,
-        [field]: value,
-      },
+      interests: updatedInterests,
     });
   };
 
-  const handleSkillLevelChange = (index: number, level: number) => {
-    const updatedSkills = [...data.skills];
-    updatedSkills[index] = { ...updatedSkills[index], level: Math.max(0, Math.min(100, level)) };
+  const handleProjectChange = (index: number, field: "title" | "description", value: string) => {
+    const updatedProjects = [...data.projects];
+    updatedProjects[index] = { ...updatedProjects[index], [field]: value };
     onChange({
       ...data,
-      skills: updatedSkills,
-    });
-  };
-
-  const handleSkillNameChange = (index: number, name: string) => {
-    const updatedSkills = [...data.skills];
-    updatedSkills[index] = { ...updatedSkills[index], name };
-    onChange({
-      ...data,
-      skills: updatedSkills,
+      projects: updatedProjects,
     });
   };
 
@@ -75,11 +65,11 @@ export default function Customizer({
       <button
         id="toggle-customizer-btn"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-bright text-brand-text-warm font-mono text-xs tracking-widest uppercase px-5 py-3 border border-brand-crimson-bright/40 shadow-2xl cursor-none transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-bright text-brand-text-warm font-mono text-xs tracking-widest uppercase px-5 py-3 border border-brand-crimson-bright/40 shadow-2xl cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
         style={{ borderRadius: "2px" }}
       >
         <Sliders className="w-4 h-4" />
-        Customize App
+        Portfolio bearbeiten
       </button>
 
       {/* Slide-out Customizer Drawer */}
@@ -109,16 +99,16 @@ export default function Customizer({
               <div className="flex items-center justify-between border-b border-brand-wine-light/45 pb-4 mb-6">
                 <div>
                   <h3 className="font-syne text-xl font-bold tracking-tight text-brand-text-warm uppercase">
-                    Personalize Website
+                    Portfolio bearbeiten
                   </h3>
                   <p className="font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mt-1">
-                    Live client-side playground
+                    Änderungen werden hier gespeichert
                   </p>
                 </div>
                 <button
                   id="close-customizer-btn"
                   onClick={() => setIsOpen(false)}
-                  className="p-1 hover:text-brand-crimson-bright transition-colors cursor-none"
+                  className="p-1 hover:text-brand-crimson-bright transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -132,21 +122,21 @@ export default function Customizer({
                   <button
                     id="reset-customizer-btn"
                     onClick={onReset}
-                    className="w-full flex items-center justify-center gap-2 border border-brand-wine-light hover:border-brand-crimson font-mono text-[10px] tracking-[0.15em] uppercase py-2 bg-brand-bg-deep/50 hover:bg-brand-wine-dark/30 transition-colors cursor-none"
+                    className="w-full flex items-center justify-center gap-2 border border-brand-wine-light hover:border-brand-crimson font-mono text-[10px] tracking-[0.15em] uppercase py-2 bg-brand-bg-deep/50 hover:bg-brand-wine-dark/30 transition-colors cursor-pointer"
                     style={{ borderRadius: "2px" }}
                   >
                     <RotateCcw className="w-3 h-3" />
-                    Reset to Aurelia's Defaults
+                    Auf Anfang zurücksetzen
                   </button>
                 </div>
 
                 {/* Profile Image upload box */}
                 <div>
                   <label className="block font-mono text-[10px] text-brand-text-muted tracking-[0.15em] uppercase mb-2">
-                    Profile Photography
+                    Profilfoto
                   </label>
                   <div 
-                    className="border border-dashed border-brand-wine-light p-4 text-center cursor-none bg-brand-bg-deep/40 hover:border-brand-crimson-bright transition-colors"
+                    className="border border-dashed border-brand-wine-light p-4 text-center cursor-pointer bg-brand-bg-deep/40 hover:border-brand-crimson-bright transition-colors"
                     style={{ borderRadius: "2px" }}
                   >
                     {photoUrl ? (
@@ -158,14 +148,14 @@ export default function Customizer({
                           className="w-full h-full object-cover" 
                         />
                         <div className="absolute inset-0 bg-brand-bg-deep/40 flex items-center justify-center font-mono text-[8px] uppercase">
-                          Loaded
+                          Geladen
                         </div>
                       </div>
                     ) : (
                       <Upload className="w-6 h-6 mx-auto text-brand-text-muted mb-2" />
                     )}
-                    <label className="cursor-none text-brand-crimson-bright hover:text-brand-text-warm font-mono text-[11px] uppercase tracking-wider block">
-                      Choose Photography File
+                    <label className="cursor-pointer text-brand-crimson-bright hover:text-brand-text-warm font-mono text-[11px] uppercase tracking-wider block">
+                      Foto auswählen
                       <input 
                         type="file" 
                         accept="image/*" 
@@ -174,7 +164,7 @@ export default function Customizer({
                       />
                     </label>
                     <span className="text-[10px] text-brand-text-muted/65 block mt-1">
-                      Local JPG / PNG. Reads locally in browser.
+                      JPG- oder PNG-Datei. Bleibt in diesem Browser.
                     </span>
                   </div>
                 </div>
@@ -182,12 +172,12 @@ export default function Customizer({
                 {/* Field Header */}
                 <div className="border-t border-brand-wine-light/35 pt-4">
                   <h4 className="font-mono text-[11px] tracking-[0.2em] text-brand-crimson-bright uppercase mb-3 font-semibold">
-                    Identity Parameters
+                    Deine Angaben
                   </h4>
                   <div className="space-y-4">
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Full Name
+                        Name
                       </label>
                       <input
                         type="text"
@@ -198,43 +188,18 @@ export default function Customizer({
                       />
                     </div>
 
-                    <div>
-                      <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Professional Role
-                      </label>
-                      <input
-                        type="text"
-                        value={data.role}
-                        onChange={(e) => handleTextChange("role", e.target.value)}
-                        className="w-full bg-brand-bg-deep border border-brand-wine-light px-3 py-2 text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors italic"
-                        style={{ borderRadius: "2px" }}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        City / Location
-                      </label>
-                      <input
-                        type="text"
-                        value={data.city}
-                        onChange={(e) => handleTextChange("city", e.target.value)}
-                        className="w-full bg-brand-bg-deep border border-brand-wine-light px-3 py-2 text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors"
-                        style={{ borderRadius: "2px" }}
-                      />
-                    </div>
                   </div>
                 </div>
 
                 {/* Summaries */}
                 <div className="border-t border-brand-wine-light/35 pt-4">
                   <h4 className="font-mono text-[11px] tracking-[0.2em] text-brand-crimson-bright uppercase mb-3 font-semibold">
-                    Narrative Text Blocks
+                    Texte
                   </h4>
                   <div className="space-y-4">
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Hero Tagline Statement
+                        Einleitung
                       </label>
                       <textarea
                         rows={3}
@@ -247,7 +212,7 @@ export default function Customizer({
 
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        About Story Details
+                        WHO? — über mich
                       </label>
                       <textarea
                         rows={4}
@@ -260,84 +225,54 @@ export default function Customizer({
                   </div>
                 </div>
 
-                {/* Stats */}
+                {/* Interests */}
                 <div className="border-t border-brand-wine-light/35 pt-4">
                   <h4 className="font-mono text-[11px] tracking-[0.2em] text-brand-crimson-bright uppercase mb-3 font-semibold">
-                    Metric Quantities
+                    WHO? — das mag ich
                   </h4>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      <label className="block font-mono text-[9px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Years Exp
-                      </label>
-                      <input
-                        type="number"
-                        value={data.stats.years}
-                        onChange={(e) => handleNestedStatChange("years", parseInt(e.target.value) || 0)}
-                        className="w-full bg-brand-bg-deep border border-brand-wine-light px-2 py-1.5 text-brand-text-warm text-center focus:outline-none focus:border-brand-crimson transition-colors font-mono"
-                        style={{ borderRadius: "2px" }}
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-mono text-[9px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Projects
-                      </label>
-                      <input
-                        type="number"
-                        value={data.stats.projects}
-                        onChange={(e) => handleNestedStatChange("projects", parseInt(e.target.value) || 0)}
-                        className="w-full bg-brand-bg-deep border border-brand-wine-light px-2 py-1.5 text-brand-text-warm text-center focus:outline-none focus:border-brand-crimson transition-colors font-mono"
-                        style={{ borderRadius: "2px" }}
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-mono text-[9px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Core Clients
-                      </label>
-                      <input
-                        type="number"
-                        value={data.stats.clients}
-                        onChange={(e) => handleNestedStatChange("clients", parseInt(e.target.value) || 0)}
-                        className="w-full bg-brand-bg-deep border border-brand-wine-light px-2 py-1.5 text-brand-text-warm text-center focus:outline-none focus:border-brand-crimson transition-colors font-mono"
-                        style={{ borderRadius: "2px" }}
-                        min="0"
-                      />
-                    </div>
+                  <div className="space-y-3">
+                    {data.interests.map((interest, index) => (
+                      <div key={index}>
+                          <input
+                            type="text"
+                            value={interest.name}
+                            onChange={(e) => handleInterestChange(index, e.target.value)}
+                            aria-label={`Interest ${index + 1}`}
+                            className="w-full bg-brand-bg-deep border border-brand-wine-light px-3 py-2 text-xs text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors"
+                            style={{ borderRadius: "2px" }}
+                          />
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Skills */}
+                {/* What? projects */}
                 <div className="border-t border-brand-wine-light/35 pt-4">
                   <h4 className="font-mono text-[11px] tracking-[0.2em] text-brand-crimson-bright uppercase mb-3 font-semibold">
-                    Skills Metrics (Right Column of About)
+                    Was? — was ich gemacht habe
                   </h4>
-                  <div className="space-y-3">
-                    {data.skills.map((skill, index) => (
-                      <div key={index} className="grid grid-cols-12 gap-2 items-center">
-                        <div className="col-span-7">
-                          <input
-                            type="text"
-                            value={skill.name}
-                            onChange={(e) => handleSkillNameChange(index, e.target.value)}
-                            className="w-full bg-brand-bg-deep border border-brand-wine-light px-2 py-1 text-xs text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors"
-                            style={{ borderRadius: "2px" }}
-                          />
-                        </div>
-                        <div className="col-span-5 flex items-center gap-1.5">
-                          <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={skill.level}
-                            onChange={(e) => handleSkillLevelChange(index, parseInt(e.target.value))}
-                            className="w-full accent-brand-crimson cursor-none"
-                          />
-                          <span className="font-mono text-[10px] w-8 text-right text-brand-text-muted">
-                            {skill.level}%
-                          </span>
-                        </div>
+                  <div className="space-y-5">
+                    {data.projects.map((project, index) => (
+                      <div key={project.id} className="space-y-2">
+                        <label className="block font-mono text-[9px] text-brand-text-muted tracking-wider uppercase">
+                          Karte {index + 1}
+                        </label>
+                        <input
+                          type="text"
+                          value={project.title}
+                          onChange={(e) => handleProjectChange(index, "title", e.target.value)}
+                          aria-label={`Project ${index + 1} title`}
+                          className="w-full bg-brand-bg-deep border border-brand-wine-light px-3 py-2 text-xs text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors"
+                          style={{ borderRadius: "2px" }}
+                        />
+                        <textarea
+                          rows={3}
+                          value={project.description}
+                          onChange={(e) => handleProjectChange(index, "description", e.target.value)}
+                          aria-label={`Project ${index + 1} description`}
+                          className="w-full bg-brand-bg-deep border border-brand-wine-light px-3 py-2 text-xs text-brand-text-warm focus:outline-none focus:border-brand-crimson transition-colors"
+                          style={{ borderRadius: "2px" }}
+                        />
                       </div>
                     ))}
                   </div>
@@ -346,12 +281,12 @@ export default function Customizer({
                 {/* Social links */}
                 <div className="border-t border-brand-wine-light/35 pt-4">
                   <h4 className="font-mono text-[11px] tracking-[0.2em] text-brand-crimson-bright uppercase mb-3 font-semibold">
-                    Editorial Channels
+                    Soziale Netzwerke
                   </h4>
                   <div className="space-y-3">
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Email Address
+                        E-Mail-Adresse
                       </label>
                       <input
                         type="email"
@@ -364,7 +299,7 @@ export default function Customizer({
 
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        Instagram Username
+                        Instagram-Name
                       </label>
                       <input
                         type="text"
@@ -377,7 +312,7 @@ export default function Customizer({
 
                     <div>
                       <label className="block font-mono text-[10px] text-brand-text-muted tracking-wider uppercase mb-1">
-                        LinkedIn Slug
+                        LinkedIn-Profil
                       </label>
                       <input
                         type="text"
@@ -393,17 +328,17 @@ export default function Customizer({
                 {/* Save Note Banner */}
                 <div className="bg-brand-wine-dark/45 border border-brand-wine-light/50 p-3 mt-6">
                   <p className="font-mono text-[9px] text-brand-text-muted leading-relaxed">
-                    Custom properties are persisted locally in <b>localStorage</b> so your customized portfolio renders immediately on refresh or if you copy/share the site.
+                    Deine Änderungen werden lokal im Browser gespeichert und auch nach dem Neuladen angezeigt.
                   </p>
                 </div>
 
                 <button
                   id="apply-customizer-btn"
                   onClick={() => setIsOpen(false)}
-                  className="w-full bg-brand-crimson hover:bg-brand-crimson-bright border border-brand-crimson-bright/40 font-mono text-xs uppercase tracking-widest py-3 text-brand-text-warm cursor-none shadow-lg transition-transform hover:-translate-y-0.5"
+                  className="w-full bg-brand-crimson hover:bg-brand-crimson-bright border border-brand-crimson-bright/40 font-mono text-xs uppercase tracking-widest py-3 text-brand-text-warm cursor-pointer shadow-lg transition-transform hover:-translate-y-0.5"
                   style={{ borderRadius: "2px" }}
                 >
-                  Apply & Close Panel
+                  Fertig
                 </button>
               </div>
             </motion.div>

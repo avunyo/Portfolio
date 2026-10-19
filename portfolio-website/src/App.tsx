@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowUpRight, Github } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { PortfolioData } from "./types";
 import { DEFAULT_PORTFOLIO_DATA } from "./data";
 import Customizer from "./components/Customizer";
-import CustomCursor from "./components/CustomCursor";
 import ScrollReveal from "./components/ScrollReveal";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Work from "./components/Work";
-import Services from "./components/Services";
 import Contact from "./components/Contact";
 import AmbientSoundscape from "./components/AmbientSoundscape";
 
@@ -18,7 +16,53 @@ export default function App() {
     const cached = localStorage.getItem("crimson_portfolio_state");
     if (cached) {
       try {
-        return JSON.parse(cached);
+        const savedData = JSON.parse(cached) as Partial<PortfolioData>;
+        if (savedData.name === "AURELIA VALOIS") {
+          return {
+            ...DEFAULT_PORTFOLIO_DATA,
+            email: savedData.email === "design@aureliavalois.com" ? DEFAULT_PORTFOLIO_DATA.email : savedData.email ?? DEFAULT_PORTFOLIO_DATA.email,
+            instagram: savedData.instagram === "aurelia.valois" ? DEFAULT_PORTFOLIO_DATA.instagram : savedData.instagram ?? DEFAULT_PORTFOLIO_DATA.instagram,
+            linkedin: savedData.linkedin === "aurelia-valois" ? DEFAULT_PORTFOLIO_DATA.linkedin : savedData.linkedin ?? DEFAULT_PORTFOLIO_DATA.linkedin,
+          };
+        }
+        if (savedData.name === "Poina") {
+          const savedInterests = savedData.interests ?? (savedData as Partial<PortfolioData> & { skills?: PortfolioData["interests"] }).skills;
+          return {
+            ...DEFAULT_PORTFOLIO_DATA,
+            name: "Polina",
+            email: savedData.email ?? DEFAULT_PORTFOLIO_DATA.email,
+            instagram: savedData.instagram ?? DEFAULT_PORTFOLIO_DATA.instagram,
+            linkedin: savedData.linkedin ?? DEFAULT_PORTFOLIO_DATA.linkedin,
+            interests: savedInterests?.some((interest) => !["Trying new things", "Sport", "Marathon training", "Making things"].includes(interest.name))
+              ? savedInterests
+              : DEFAULT_PORTFOLIO_DATA.interests,
+          };
+        }
+        const previousDefaultDescriptions: Record<string, string> = {
+          "things-ive-made": "Schulprojekte, kreative Experimente und alles, was ich gern selbst gestalte. Hier zeige ich die Dinge, auf die ich besonders stolz bin.",
+          "writing-and-ideas": "Geschichten, Notizen und Ideen, die ich weiterentwickeln möchte. Hier sammle ich, was ich geschrieben habe und was daraus entsteht.",
+          "sport-and-challenges": "Ich bin gern aktiv und probiere neue Sportarten aus. Zurzeit trainiere ich für meinen ersten Marathon.",
+          "new-things": "Ein neues Spiel, ein neues Hobby oder eine neue Herausforderung? Wenn mich jemand fragt, bin ich wahrscheinlich schon unterwegs.",
+        };
+        const restoredProjects = savedData.projects?.map((project) => {
+          const defaultProject = DEFAULT_PORTFOLIO_DATA.projects.find(({ id }) => id === project.id);
+          const previousDescription = previousDefaultDescriptions[project.id];
+          return defaultProject && project.description === previousDescription
+            ? { ...project, description: defaultProject.description }
+            : project;
+        });
+
+        return {
+          ...DEFAULT_PORTFOLIO_DATA,
+          ...savedData,
+          bioHero: savedData.bioHero === "Ich probiere gern Neues aus – ob kreative Projekte, eine neue Sportart oder eine spannende Herausforderung. Gerade bereite ich mich auf einen Marathon vor."
+            ? DEFAULT_PORTFOLIO_DATA.bioHero
+            : savedData.bioHero ?? DEFAULT_PORTFOLIO_DATA.bioHero,
+          bioAbout: savedData.bioAbout === "Ich bin für fast alles zu haben: Wenn mich jemand einlädt, etwas Neues auszuprobieren, bin ich meistens sofort dabei. Ich mag Sport, kreative Ideen und alles, bei dem ich etwas lernen kann. Im Moment trainiere ich für einen Marathon – und freue mich schon auf das nächste Abenteuer."
+            ? DEFAULT_PORTFOLIO_DATA.bioAbout
+            : savedData.bioAbout ?? DEFAULT_PORTFOLIO_DATA.bioAbout,
+          projects: restoredProjects ?? savedData.projects ?? DEFAULT_PORTFOLIO_DATA.projects,
+        };
       } catch (err) {
         console.error("Failed to restore cached portfolio state", err);
       }
@@ -32,14 +76,40 @@ export default function App() {
   });
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    let frameId = 0;
+    const updateProgress = () => {
+      if (frameId) return;
+      frameId = requestAnimationFrame(() => {
+        frameId = 0;
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollProgress(scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0);
+      });
+    };
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   // Sync state to localStorage with quotas protections in case base64 image exceeds limit
   const handleDataChange = (newData: PortfolioData) => {
+    const projectImageChanged = newData.projects.some(
+      (project, index) => project.image !== data.projects[index]?.image,
+    );
     setData(newData);
     try {
       localStorage.setItem("crimson_portfolio_state", JSON.stringify(newData));
     } catch (err) {
       console.warn("Storage quota limit reached for metadata", err);
+      if (projectImageChanged) {
+        alert("Das Projektfoto ist für diese Sitzung verfügbar, konnte aber nicht dauerhaft im Browserspeicher gespeichert werden.");
+      }
     }
   };
 
@@ -68,24 +138,26 @@ export default function App() {
   return (
     <div id="crimson-luxury-dossier" className="min-h-screen bg-brand-bg-deep text-[#F5E8E0] relative selection:bg-brand-crimson selection:text-white">
       
-      {/* Interactive Custom Cursor */}
-      <CustomCursor />
-
       {/* FIXED NAVIGATION (Solid Cream Board as requested by the uploaded color block concept) */}
       <nav 
         id="navigation-bar"
         className="fixed top-0 left-0 right-0 z-30 bg-[#F5E8E0] border-b border-brand-crimson/25 py-3 select-none transition-all duration-300 shadow-md"
       >
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-brand-crimson/10" aria-hidden="true">
+          <div
+            className="h-full origin-left bg-brand-crimson-bright transition-transform duration-150 ease-out"
+            style={{ transform: `scaleX(${scrollProgress})` }}
+          />
+        </div>
         <div className="container mx-auto px-6 md:px-12 xl:px-20 flex items-center justify-between">
           
           {/* LOGO */}
           <a
             id="nav-logo"
             href="#"
-            className="font-syne font-black text-2xl tracking-tight text-[#1A0508] hover:text-brand-crimson transition-colors cursor-none uppercase"
+            className="font-syne font-black text-sm sm:text-base md:text-lg tracking-tight text-[#1A0508] hover:text-brand-crimson transition-colors cursor-pointer whitespace-nowrap"
           >
-            {data.name.split(" ")[0] || "PORTFOLIO"}
-            <span className="text-brand-crimson-bright font-black">.</span>
+            Hi, my name is...
           </a>
 
           {/* DESKTOP LINKS */}
@@ -94,28 +166,22 @@ export default function App() {
             className="hidden md:flex items-center gap-8 font-mono text-[13px] tracking-wider uppercase font-black text-[#1A0508]"
           >
             <a
-              href="#about-section"
-              className="relative py-1 cursor-none text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
-            >
-              ABOUT / INDEX
-            </a>
-            <a
               href="#work-section"
-              className="relative py-1 cursor-none text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
+              className="relative py-1 cursor-pointer text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
             >
-              EXPERIMENTS / WORK
+              WHAT?
             </a>
             <a
-              href="#services-section"
-              className="relative py-1 cursor-none text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
+              href="#about-section"
+              className="relative py-1 cursor-pointer text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
             >
-              CAPABILITIES
+              WHO?
             </a>
             <a
               href="#contact-section"
-              className="relative py-1 cursor-none text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
+              className="relative py-1 cursor-pointer text-[#1A0508] hover:text-brand-crimson transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 hover:after:scale-x-100 hover:after:origin-left after:bg-brand-crimson after:transition-transform after:duration-300"
             >
-              CHANNELS
+              Contact
             </a>
           </div>
 
@@ -127,10 +193,10 @@ export default function App() {
             <a
               id="desktop-nav-cta"
               href="#contact-section"
-              className="px-5 py-2.5 bg-[#1A0508] hover:bg-brand-crimson text-[#F5E8E0] hover:text-white font-mono text-xs tracking-widest font-black uppercase cursor-none transition-all duration-300 border border-transparent shadow-sm"
+              className="px-5 py-2.5 bg-[#1A0508] hover:bg-brand-crimson text-[#F5E8E0] hover:text-white font-mono text-xs tracking-widest font-black uppercase cursor-pointer transition-all duration-300 border border-transparent shadow-sm"
               style={{ borderRadius: "2px" }}
             >
-              LET'S TALK
+              Say hello
             </a>
           </div>
 
@@ -140,8 +206,8 @@ export default function App() {
             <button
               id="mobile-nav-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1 text-[#1A0508] hover:text-brand-crimson cursor-none"
-              aria-label="Toggle menu"
+              className="p-1 text-[#1A0508] hover:text-brand-crimson cursor-pointer"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -158,27 +224,19 @@ export default function App() {
         >
           <div className="flex flex-col gap-8 font-syne text-2xl font-bold uppercase tracking-tight text-brand-text-warm">
             <a
-              href="#about-section"
-              onClick={handleNavLinkClick}
-              className="hover:text-brand-crimson-bright transition-colors flex items-center justify-between py-2 border-b border-brand-wine-light/20"
-            >
-              01 / ABOUT
-              <ArrowUpRight className="w-5 h-5 text-brand-crimson-bright" />
-            </a>
-            <a
               href="#work-section"
               onClick={handleNavLinkClick}
               className="hover:text-brand-crimson-bright transition-colors flex items-center justify-between py-2 border-b border-brand-wine-light/20"
             >
-              02 / EXPERIMENTS
+              01 / WHAT?
               <ArrowUpRight className="w-5 h-5 text-brand-crimson-bright" />
             </a>
             <a
-              href="#services-section"
+              href="#about-section"
               onClick={handleNavLinkClick}
               className="hover:text-brand-crimson-bright transition-colors flex items-center justify-between py-2 border-b border-brand-wine-light/20"
             >
-              03 / CAPABILITIES
+              02 / WHO?
               <ArrowUpRight className="w-5 h-5 text-brand-crimson-bright" />
             </a>
             <a
@@ -186,23 +244,23 @@ export default function App() {
               onClick={handleNavLinkClick}
               className="hover:text-brand-crimson-bright transition-colors flex items-center justify-between py-2 border-b border-brand-wine-light/20"
             >
-              04 / CHANNELS
+              03 / CONTACT
               <ArrowUpRight className="w-5 h-5 text-brand-crimson-bright" />
             </a>
           </div>
 
           <div className="flex flex-col gap-4">
-            <a
+              <a
               id="mobile-menu-cta"
               href="#contact-section"
               onClick={handleNavLinkClick}
               className="w-full text-center py-4 bg-brand-crimson text-brand-text-warm font-mono text-[10px] tracking-[0.2em] font-bold uppercase"
               style={{ borderRadius: "2px" }}
             >
-              COMMISSION ENGAGEMENT
+              GET IN TOUCH
             </a>
             <p className="font-mono text-[8px] text-brand-text-muted text-center uppercase tracking-widest">
-              SYSTEM CONSTRAINTS ENABLED // París, FR
+              Schön, dass du da bist
             </p>
           </div>
         </div>
@@ -220,19 +278,14 @@ export default function App() {
           />
         </ScrollReveal>
 
-        {/* ABOUT SECTION */}
+        {/* WHAT? SECTION */}
+        <ScrollReveal id="work-reveal" delayMs={150}>
+          <Work data={data} photoUrl={photoUrl} onChange={handleDataChange} />
+        </ScrollReveal>
+
+        {/* WHO? SECTION */}
         <ScrollReveal id="about-reveal" delayMs={150}>
           <About data={data} />
-        </ScrollReveal>
-
-        {/* PROJECTS SECTION */}
-        <ScrollReveal id="work-reveal" delayMs={150}>
-          <Work data={data} />
-        </ScrollReveal>
-
-        {/* SERVICES SECTION */}
-        <ScrollReveal id="services-reveal" delayMs={150}>
-          <Services data={data} />
         </ScrollReveal>
 
         {/* CONTACT SECTION */}
@@ -252,10 +305,10 @@ export default function App() {
           {/* Left Column Copyright metadata */}
           <div className="md:col-span-6 text-center md:text-left" id="footer-cr">
             <p className="font-mono text-[10px] tracking-widest uppercase">
-              &copy; {new Date().getFullYear()} {data.name}. ALL RIGHTS RESERVED.
+              &copy; {new Date().getFullYear()} {data.name}.               ALLE RECHTE VORBEHALTEN.
             </p>
             <p className="font-mono text-[8px] text-brand-text-muted/65 uppercase tracking-[0.15em] mt-1">
-              HAUTE TECH DESIGN PORTFOLIO RENDERED IN SILICO
+              EINE KLEINE SAMMLUNG MEINER IDEEN UND PROJEKTE
             </p>
           </div>
 
@@ -264,10 +317,9 @@ export default function App() {
             id="footer-fast-links"
             className="md:col-span-6 flex flex-wrap justify-center md:justify-end gap-6 md:gap-10 font-mono text-[9px] tracking-widest uppercase font-medium"
           >
-            <a href="#about-section" className="hover:text-brand-text-warm transition-colors cursor-none">ABOUT</a>
-            <a href="#work-section" className="hover:text-brand-text-warm transition-colors cursor-none">WORK</a>
-            <a href="#services-section" className="hover:text-brand-text-warm transition-colors cursor-none">CAPABILITIES</a>
-            <a href="#contact-section" className="hover:text-brand-text-warm transition-colors cursor-none">CHANNELS</a>
+            <a href="#work-section" className="hover:text-brand-text-warm transition-colors cursor-pointer">WHAT?</a>
+            <a href="#about-section" className="hover:text-brand-text-warm transition-colors cursor-pointer">WHO?</a>
+            <a href="#contact-section" className="hover:text-brand-text-warm transition-colors cursor-pointer">CONTACT</a>
           </div>
 
         </div>

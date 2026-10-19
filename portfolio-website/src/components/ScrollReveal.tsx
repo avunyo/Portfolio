@@ -54,10 +54,10 @@ export default function ScrollReveal({
     <div
       ref={elementRef}
       id={id}
-      className={`${className} transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`scroll-reveal ${isVisible ? "is-visible" : ""} ${className} transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isVisible
           ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-[40px] pointer-events-none"
+          : "opacity-0 translate-y-4 pointer-events-none"
       }`}
       style={{ transitionDelay: `${delayMs}ms` }}
     >

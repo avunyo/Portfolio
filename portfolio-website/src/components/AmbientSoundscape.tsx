@@ -152,8 +152,8 @@ export default function AmbientSoundscape() {
     >
       <button
         onClick={toggleSoundscape}
-        className="flex items-center gap-1.5 cursor-none text-brand-bg-deep hover:text-brand-crimson transition-colors"
-        title="Toggle relaxing ambient backing track"
+        className="flex items-center gap-1.5 cursor-pointer text-brand-bg-deep hover:text-brand-crimson transition-colors"
+        title="Hintergrundklang ein- oder ausschalten"
         id="soundscape-toggle-btn"
       >
         {isPlaying ? (
@@ -162,13 +162,13 @@ export default function AmbientSoundscape() {
           <VolumeX className="w-3.5 h-3.5" />
         )}
         <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em]">
-          {isPlaying ? "AURORAL SOUND ON" : "AURORAL SOUND OFF"}
+          {isPlaying ? "TON AN" : "TON AUS"}
         </span>
       </button>
 
       {isPlaying && (
         <div className="flex items-center gap-1 animate-fade-in" id="soundscape-volume-container">
-          <span className="font-mono text-[8px] text-brand-bg-deep/60">VOL</span>
+          <span className="font-mono text-[8px] text-brand-bg-deep/60">LAUT</span>
           <input
             type="range"
             min="0"
@@ -176,7 +176,7 @@ export default function AmbientSoundscape() {
             step="0.05"
             value={volume}
             onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-12 h-[2px] bg-brand-wine-dark/20 accent-brand-crimson outline-none cursor-none"
+            className="w-12 h-[2px] bg-brand-wine-dark/20 accent-brand-crimson outline-none cursor-pointer"
             id="soundscape-volume-slider"
           />
         </div>

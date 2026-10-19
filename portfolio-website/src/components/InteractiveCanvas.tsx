@@ -101,8 +101,8 @@ export default function InteractiveCanvas() {
         const dist = Math.sqrt(dx * dx + dy * dy);
         const force = Math.max(0, (200 - dist) / 200);
 
-        p.x = p.originX + (dx / dist) * force * 45;
-        p.y = p.originY + (dy / dist) * force * 45;
+        p.x = dist === 0 ? p.originX : p.originX + (dx / dist) * force * 45;
+        p.y = dist === 0 ? p.originY : p.originY + (dy / dist) * force * 45;
 
         if (index === 0) {
           ctx.moveTo(p.x, p.y);
@@ -137,16 +137,6 @@ export default function InteractiveCanvas() {
       ctx.beginPath();
       ctx.arc(mouse.x, mouse.y, 75, 0, Math.PI * 2);
       ctx.fill();
-
-      // Intersecting target hair
-      ctx.strokeStyle = "rgba(245, 232, 224, 0.45)";
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(mouse.x - 12, mouse.y);
-      ctx.lineTo(mouse.x + 12, mouse.y);
-      ctx.moveTo(mouse.x, mouse.y - 12);
-      ctx.lineTo(mouse.x, mouse.y + 12);
-      ctx.stroke();
 
       animationId = requestAnimationFrame(draw);
     };
