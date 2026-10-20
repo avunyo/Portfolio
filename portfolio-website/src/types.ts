@@ -15,5 +15,6 @@ export interface PortfolioData {
     description: string;
     tags: string[];
     image?: string;
+    gallery?: (string | null)[];
   }[];
 }

@@ -100,7 +100,9 @@ export default function App() {
   // Sync state to localStorage with quotas protections in case base64 image exceeds limit
   const handleDataChange = (newData: PortfolioData) => {
     const projectImageChanged = newData.projects.some(
-      (project, index) => project.image !== data.projects[index]?.image,
+      (project, index) =>
+        project.image !== data.projects[index]?.image ||
+        project.gallery?.some((image, slotIndex) => image !== data.projects[index]?.gallery?.[slotIndex]),
     );
     setData(newData);
     try {

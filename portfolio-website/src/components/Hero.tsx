@@ -1,8 +1,6 @@
-import React, { useRef } from "react";
-import { Upload } from "lucide-react";
+import { useRef, type ChangeEvent } from "react";
+import { ArrowDown, ArrowUpRight, ImagePlus } from "lucide-react";
 import { PortfolioData } from "../types";
-import InteractiveCanvas from "./InteractiveCanvas";
-import HalftoneField from "./HalftoneField";
 
 interface HeroProps {
   data: PortfolioData;
@@ -13,187 +11,77 @@ interface HeroProps {
 export default function Hero({ data, photoUrl, onPhotoUpload }: HeroProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          onPhotoUpload(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("Bitte wähle eine Bilddatei aus.");
+      return;
     }
-  };
 
-  const triggerUpload = () => {
-    fileInputRef.current?.click();
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") onPhotoUpload(reader.result);
+      else alert("Das Bild konnte nicht geladen werden. Bitte versuche es erneut.");
+    };
+    reader.onerror = () => alert("Das Bild konnte nicht gelesen werden. Bitte versuche es erneut.");
+    reader.readAsDataURL(file);
   };
 
   return (
-    <section
-      id="hero-section"
-      className="relative min-h-screen flex flex-col justify-between overflow-hidden pt-28 md:pt-36 pb-12 border-b border-brand-wine-light/35 bg-brand-bg-deep"
-    >
-      {/* Soft color movement keeps the background lively without competing with the content. */}
-      <div className="hero-aurora absolute inset-0 pointer-events-none" />
-      <div className="absolute inset-0 animate-grid-drift pointer-events-none" />
-      <HalftoneField />
-
-      <div className="container mx-auto px-6 md:px-12 xl:px-20 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center my-auto">
-        
-        {/* Left Column Text Content */}
-        <div className="lg:col-span-7 flex flex-col items-start" id="hero-text-block">
-          
-          {/* Eyebrow label */}
-          <div
-            className="flex items-center gap-2 mb-6 hero-enter"
-            style={{ animationDelay: "100ms" }}
-            id="hero-eyebrow"
-          >
-            <span className="w-1.5 h-1.5 bg-brand-crimson-bright animate-ping" style={{ borderRadius: "2px" }} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-text-muted font-medium">
-              SCHÜLERIN · IMMER OFFEN FÜR NEUES
-            </span>
+    <section id="hero-section" className="hero-editorial">
+      <div className="hero-editorial-layout container mx-auto px-6 md:px-12 xl:px-20">
+        <div className="hero-editorial-copy">
+          <div className="hero-editorial-eyebrow">
+            <span className="hero-live-dot" />
+            <span>SCHÜLERIN · IMMER OFFEN FÜR NEUES</span>
           </div>
-
-          {/* Headline Name */}
-          <h1 
-            id="hero-headline"
-            className="hero-headline font-syne font-extrabold text-[clamp(3rem,7.1vw,6.75rem)] leading-[0.9] text-brand-text-warm tracking-[-0.065em] select-none"
-            style={{ animationDelay: "220ms" }}
-          >
-            <span className="hero-title-line block" style={{ animationDelay: "180ms" }}>Hi, my name is</span>
-            <span className="hero-title-line hero-title-name block text-brand-crimson-bright mt-2" style={{ animationDelay: "340ms" }}>
-              {data.name}
-            </span>
+          <h1 id="hero-headline" className="hero-editorial-title">
+            <span className="hero-title-intro">Hi, my name is</span>
+            <span className="hero-title-name">{data.name}<i>.</i></span>
           </h1>
+          <p id="hero-bio" className="hero-editorial-bio">{data.bioHero}</p>
 
-          {/* Bio paragraph */}
-          <p 
-            id="hero-bio"
-            className="font-sans font-light text-brand-text-muted mt-6 text-xs sm:text-sm leading-[1.8] max-w-lg hero-enter"
-            style={{ animationDelay: "360ms" }}
-          >
-            {data.bioHero}
-          </p>
-
-          {/* CTA Buttons row */}
-          <div
-            className="flex flex-wrap gap-4 mt-8 w-full sm:w-auto hero-enter"
-            style={{ animationDelay: "500ms" }}
-            id="hero-cta-group"
-          >
-            <a
-              id="hero-btn-work"
-              href="#work-section"
-              className="group relative flex-1 sm:flex-initial text-center bg-brand-crimson hover:bg-brand-crimson-bright text-brand-text-warm font-mono text-[10px] tracking-[0.2em] font-semibold uppercase py-4 px-8 border border-brand-crimson-bright/35 cursor-pointer transition-all duration-300 hover:-translate-y-[2px] shadow-lg shadow-brand-crimson/15"
-              style={{ borderRadius: "2px" }}
-            >
-              MEINE PROJEKTE
+          <div className="hero-editorial-actions" id="hero-cta-group">
+            <a id="hero-btn-work" href="#work-section" className="hero-primary-link">
+              MEINE PROJEKTE <ArrowDown aria-hidden="true" />
             </a>
-            <a
-              id="hero-btn-contact"
-              href="#contact-section"
-              className="flex-1 sm:flex-initial text-center bg-transparent hover:bg-brand-wine-dark/20 text-brand-text-warm border border-brand-text-muted/30 hover:border-brand-text-warm font-mono text-[10px] tracking-[0.2em] font-semibold uppercase py-4 px-8 cursor-pointer transition-all duration-300 hover:-translate-y-[2px]"
-              style={{ borderRadius: "2px" }}
-            >
-              KONTAKT
+            <a id="hero-btn-contact" href="#contact-section" className="hero-secondary-link">
+              KONTAKT <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
-
+          <span className="hero-editorial-note">KREATIV · NEUGIERIG · IN BEWEGUNG</span>
         </div>
 
-        {/* Right Column Frame Content */}
-        <div className="lg:col-span-5 flex justify-center pb-8 lg:pb-0" id="hero-visual-block">
-          <div
-            className="relative w-full max-w-[340px] aspect-[4/5] hero-frame-enter"
-            style={{ animationDelay: "260ms" }}
-            id="hero-photo-container"
+        <div className="hero-monument-column">
+          <button
+            type="button"
+            id="hero-photo-frame"
+            className={`hero-monument${photoUrl ? " has-photo" : ""}`}
+            onClick={() => fileInputRef.current?.click()}
+            aria-label={photoUrl ? "Foto ersetzen" : "Foto hinzufügen"}
           >
-            
-            {/* Offset crimson border line */}
-            <div 
-              className="absolute inset-0 border border-brand-crimson-bright translate-x-4 translate-y-4 z-0 pointer-events-none"
-              style={{ borderRadius: "2px" }}
-            />
-
-            {/* Main Interactive Frame card */}
-            <div 
-              onClick={triggerUpload}
-              className="group absolute inset-0 z-10 bg-brand-wine-dark/70 border border-brand-wine-light/50 overflow-hidden cursor-pointer flex flex-col items-center justify-center transition-all duration-300 hover:border-brand-crimson-bright shadow-2xl"
-              style={{ borderRadius: "2px" }}
-              id="hero-photo-frame"
-            >
-              {photoUrl ? (
-                <img
-                  referrerPolicy="no-referrer"
-                  src={photoUrl}
-                  alt={data.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  id="uploaded-portrait"
-                />
-              ) : (
-                <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-6 text-center text-brand-text-muted transition-colors group-hover:text-brand-text-warm">
-                  {/* Surprising interactive background mesh */}
-                  <InteractiveCanvas />
-                  
-                  {/* Foreground labels positioned relatively above kinetic canvas */}
-                  <div className="relative z-20 flex flex-col items-center pointer-events-none">
-                    <svg 
-                      className="w-14 h-14 text-brand-crimson-bright/80 mb-4"
-                      viewBox="0 0 100 100" 
-                      fill="none" 
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M10 10H90V90H10V10Z" stroke="currentColor" strokeWidth="0.5" />
-                      <path d="M28 50H72M50 28V72" stroke="currentColor" strokeWidth="0.5" />
-                      <circle cx="50" cy="50" r="4" fill="currentColor" />
-                    </svg>
-                    <span className="font-mono text-[9px] tracking-[0.25em] uppercase font-bold text-brand-text-warm bg-brand-bg-deep/85 px-2 py-1 border border-brand-wine-light/50">
-                      EIN KLEINER SPIELRAUM
-                    </span>
-                    <span className="font-sans font-light text-xs mt-3 max-w-[200px] leading-relaxed text-brand-text-muted bg-brand-bg-deep/80 p-2 border border-brand-wine-light/30">
-                      Bewege den Mauszeiger oder klicke hier, um ein Foto hinzuzufügen.
-                    </span>
-                    <div className="mt-4 flex items-center gap-1.5 bg-brand-crimson border border-brand-crimson-bright/40 px-3.5 py-2 text-[9px] font-mono uppercase tracking-widest text-brand-text-warm shadow-md">
-                      <Upload className="w-3 h-3 text-brand-text-warm" />
-                      FOTO HINZUFÜGEN
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Overlay highlight edit tip */}
-              {photoUrl && (
-                <div className="absolute inset-0 bg-brand-bg-deep/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-6 text-center">
-                  <Upload className="w-6 h-6 text-brand-crimson-bright mb-2" />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#F5E8E0]">Foto ersetzen</span>
-                  <span className="text-[10px] text-brand-text-muted mt-1">JPG- oder PNG-Datei auswählen</span>
-                </div>
-              )}
-
-              {/* Hidden native input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      {/* Pulsing Scroll Indicator line at bottom */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none" id="scroll-pulse">
-        <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-brand-text-muted mb-2">WEITER SCROLLEN</span>
-        <div className="w-[1px] h-12 bg-brand-wine-light relative overflow-hidden" style={{ borderRadius: "2px" }}>
-          {/* pulsating core line */}
-          <div className="absolute top-0 left-0 right-0 w-full bg-brand-crimson-bright h-6 animate-[bounce_2s_infinite] origin-top" />
+            {photoUrl ? (
+              <img id="uploaded-portrait" src={photoUrl} alt={data.name} />
+            ) : (
+              <span className="hero-photo-placeholder">
+                <ImagePlus aria-hidden="true" />
+                <span>DEIN FOTO</span>
+              </span>
+            )}
+            <span className="hero-monument-caption">
+              {photoUrl ? "FOTO ÄNDERN" : "FOTO HINZUFÜGEN"}
+            </span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="sr-only"
+            tabIndex={-1}
+          />
         </div>
       </div>
     </section>

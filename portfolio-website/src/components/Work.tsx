@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
-import { ArrowLeft, ArrowRight, ImagePlus, Trash2, Upload } from "lucide-react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { ArrowLeft, ArrowRight, ImagePlus, Trash2 } from "lucide-react";
 import { PortfolioData } from "../types";
 
 interface WorkProps {
@@ -11,7 +11,6 @@ interface WorkProps {
 export default function Work({ data, photoUrl, onChange }: WorkProps) {
   const [rotationStep, setRotationStep] = useState(0);
   const [flippedProjectId, setFlippedProjectId] = useState<string | null>(null);
-  const [pointerHint, setPointerHint] = useState<{ projectId: string; x: number; y: number } | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const suppressClickRef = useRef(false);
@@ -86,7 +85,7 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
     if (suppressClickTimerRef.current) clearTimeout(suppressClickTimerRef.current);
   }, []);
 
-  const handleProjectImageChange = (projectId: string, event: ChangeEvent<HTMLInputElement>) => {
+  const handleProjectImageChange = (projectId: string, slotIndex: number, event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
@@ -105,7 +104,15 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
       onChange({
         ...data,
         projects: data.projects.map((project) =>
-          project.id === projectId ? { ...project, image } : project,
+          project.id === projectId
+            ? {
+                ...project,
+                image: slotIndex === 0 ? image : project.image,
+                gallery: Array.from({ length: 3 }, (_, index) =>
+                  index === 0 ? null : index === slotIndex ? image : project.gallery?.[index] ?? null,
+                ),
+              }
+            : project,
         ),
       });
     };
@@ -115,22 +122,20 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
     reader.readAsDataURL(file);
   };
 
-  const handleProjectImageRemove = (projectId: string) => {
+  const handleProjectImageRemove = (projectId: string, slotIndex: number) => {
     onChange({
       ...data,
       projects: data.projects.map((project) =>
-        project.id === projectId ? { ...project, image: undefined } : project,
+        project.id === projectId
+          ? {
+              ...project,
+              image: slotIndex === 0 ? undefined : project.image,
+              gallery: Array.from({ length: 3 }, (_, index) =>
+                index === slotIndex ? null : project.gallery?.[index] ?? null,
+              ),
+            }
+          : project,
       ),
-    });
-  };
-
-  const handleCardPointerMove = (projectId: string, event: PointerEvent<HTMLButtonElement>) => {
-    if (event.pointerType !== "mouse") return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    setPointerHint({
-      projectId,
-      x: Math.max(42, Math.min(event.clientX - bounds.left, bounds.width - 42)),
-      y: Math.max(42, Math.min(event.clientY - bounds.top, bounds.height - 42)),
     });
   };
 
@@ -180,12 +185,12 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <div className="lg:col-span-5 min-w-0">
+        <div className={`project-showcase grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch${flippedProjectId ? " has-open-project-card" : ""}`}>
+          <div className={`lg:col-span-5 min-w-0${flippedProjectId ? " project-work-column is-card-expanded" : ""}`}>
             <div
               ref={trackRef}
               role="region"
-              className={`project-track project-carousel-stage${isSpinning ? " is-spinning" : ""}`}
+              className={`project-track project-carousel-stage${isSpinning ? " is-spinning" : ""}${flippedProjectId ? " has-open-card" : ""}`}
               aria-label="Projektkarussell. Mit Mausrad, Pfeiltasten oder Wischgeste navigieren."
               onClickCapture={(event) => {
                 if (!suppressClickRef.current) return;
@@ -197,6 +202,7 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
               onKeyDown={(event) => {
                 if (event.key === "ArrowLeft") stepCards(-1);
                 if (event.key === "ArrowRight") stepCards(1);
+                if (event.key === "Escape") setFlippedProjectId(null);
               }}
               onPointerDown={(event) => {
                 if (event.pointerType === "touch") {
@@ -264,48 +270,33 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
                             }
                             setFlippedProjectId(project.id);
                           }}
-                          onPointerMove={(event) => handleCardPointerMove(project.id, event)}
-                          onPointerLeave={() => setPointerHint(null)}
-                          className={`project-card-front-button group ${isSelected ? "is-selected" : ""}`}
+                          className={`project-card-front-button project-card-cover group ${isSelected ? "is-selected" : ""}${project.image ? " has-cover-image" : ""}`}
                           style={{ borderRadius: "8px" }}
                         >
-                          <span className="relative z-10 flex items-center justify-between">
-                            <span className={`font-mono text-[10px] tracking-widest transition-colors duration-300 ${isSelected ? "text-brand-bg-deep" : "text-brand-crimson-bright group-hover:text-brand-bg-deep"}`}>
-                              {project.number} / {String(data.projects.length).padStart(2, "0")}
-                            </span>
-                            <ArrowRight className={`project-card-open-arrow w-4 h-4 ${isSelected ? "text-brand-bg-deep" : "text-brand-text-muted group-hover:text-brand-bg-deep"}`} />
+                          {project.image && (
+                            <img
+                              src={project.image}
+                              alt=""
+                              aria-hidden="true"
+                              className="project-card-cover-image"
+                            />
+                          )}
+                          <span className="project-card-cover-topline">
+                            <span>{project.number} / {String(data.projects.length).padStart(2, "0")}</span>
+                            <ArrowRight className="project-card-open-arrow w-4 h-4" aria-hidden="true" />
                           </span>
-                          <span className="relative z-10 min-w-0">
-                            <span className="flex flex-wrap gap-2 mb-4">
-                              {project.tags.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className={`font-mono text-[8px] uppercase tracking-wider px-2 py-1 border ${
-                                    isSelected
-                                      ? "border-brand-bg-deep/25 text-brand-bg-deep"
-                                      : "border-brand-wine-light/60 text-brand-text-muted group-hover:border-brand-bg-deep/25 group-hover:text-brand-bg-deep"
-                                  }`}
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </span>
-                            <span className={`block min-w-0 break-words font-syne font-extrabold text-lg sm:text-xl uppercase tracking-tight leading-tight transition-colors duration-300 ${isSelected ? "text-brand-bg-deep" : "text-brand-text-warm group-hover:text-brand-bg-deep"}`}>
+                          <span className="project-card-cover-copy">
+                            <span className="project-card-cover-title">
                               {project.title}
                             </span>
-                            <span className={`block mt-4 font-mono text-[9px] uppercase tracking-[0.16em] ${isSelected ? "text-brand-bg-deep/70" : "text-brand-text-muted group-hover:text-brand-bg-deep/70"}`}>
-                              CLICK TO OPEN
+                            <span className="project-card-cover-tags">
+                              {project.tags.join(" · ")}
+                            </span>
+                            <span className="project-card-cover-bottom">
+                              <span>ÖFFNEN</span>
+                              <span aria-hidden="true">↗</span>
                             </span>
                           </span>
-                          {pointerHint?.projectId === project.id && !isFlipped && (
-                            <span
-                              className="project-cursor-bubble"
-                              style={{ left: pointerHint.x, top: pointerHint.y }}
-                              aria-hidden="true"
-                            >
-                              {isSelected ? "OPEN" : "SELECT"}
-                            </span>
-                          )}
                         </button>
                       </div>
                       <div
@@ -330,53 +321,65 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
                             <div className="absolute inset-0 bg-gradient-to-t from-brand-bg-deep via-brand-bg-deep/70 to-brand-bg-deep/20" />
                           </>
                         ) : (
-                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_35%,rgba(168,34,58,0.25),transparent_55%),linear-gradient(135deg,#2D0A10_0%,#1A0508_75%)]" />
+                          <div className="absolute inset-0 bg-brand-bg-dark" />
                         )}
                         <div className="relative z-10 flex items-center justify-between">
                           <span className="font-mono text-[10px] tracking-widest text-brand-text-warm">
-                            {project.number} / PHOTO
+                            {project.number} / PHOTO DECK
                           </span>
                           <span className="font-mono text-[8px] uppercase tracking-wider text-brand-text-warm/75">
                             CLICK TO FLIP BACK
                           </span>
                         </div>
-                        <div className="relative z-10 min-w-0">
-                          <h3 className="font-syne font-extrabold text-lg uppercase tracking-tight text-brand-text-warm mb-3 break-words">
-                            {project.image ? "CHANGE PHOTO" : "ADD A PHOTO"}
-                          </h3>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <label
-                              data-no-drag
-                              className="inline-flex items-center gap-2 px-3 py-2 bg-brand-crimson hover:bg-brand-crimson-bright text-brand-text-warm font-mono text-[9px] uppercase tracking-wider cursor-pointer transition-colors"
-                              style={{ borderRadius: "4px" }}
-                            >
-                              {project.image ? <Upload className="w-3.5 h-3.5" /> : <ImagePlus className="w-3.5 h-3.5" />}
-                              {project.image ? "Choose image" : "Choose photo"}
-                              <input
-                                type="file"
-                                accept="image/*"
-                                disabled={!isFlipped}
-                                onChange={(event) => handleProjectImageChange(project.id, event)}
-                                className="sr-only"
-                              />
-                            </label>
-                            {project.image && (
-                              <button
-                                type="button"
-                                data-no-drag
-                                disabled={!isFlipped}
-                                onClick={() => handleProjectImageRemove(project.id)}
-                                className="inline-flex items-center gap-2 px-3 py-2 border border-brand-text-warm/40 text-brand-text-warm font-mono text-[9px] uppercase tracking-wider hover:border-brand-crimson-bright hover:text-brand-crimson-bright transition-colors"
-                                style={{ borderRadius: "4px" }}
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                Remove
-                              </button>
-                            )}
+                        <div className="project-photo-deck relative z-10">
+                          <div className="project-photo-stack" aria-label={`Photo templates for ${project.title}`}>
+                            {[0, 1, 2].map((slotIndex) => {
+                              const galleryImage = project.gallery?.[slotIndex] ?? (slotIndex === 0 ? project.image : null);
+                              return (
+                                <div
+                                  key={slotIndex}
+                                  className={`project-photo-slot project-photo-slot-${slotIndex + 1}`}
+                                  style={{ zIndex: slotIndex + 1 }}
+                                >
+                                  {galleryImage ? (
+                                    <img src={galleryImage} alt={`Photo ${slotIndex + 1} for ${project.title}`} />
+                                  ) : (
+                                    <div className="project-photo-placeholder">
+                                      <ImagePlus aria-hidden="true" />
+                                      <span>PHOTO {String(slotIndex + 1).padStart(2, "0")}</span>
+                                    </div>
+                                  )}
+                                  <div className="project-photo-actions">
+                                    <label className="project-photo-upload" data-no-drag>
+                                      <ImagePlus className="w-3 h-3" />
+                                      {galleryImage ? "Replace" : "Add photo"}
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        disabled={!isFlipped}
+                                        onChange={(event) => handleProjectImageChange(project.id, slotIndex, event)}
+                                        className="sr-only"
+                                      />
+                                    </label>
+                                    {galleryImage && (
+                                      <button
+                                        type="button"
+                                        aria-label={`Remove photo ${slotIndex + 1}`}
+                                        data-no-drag
+                                        disabled={!isFlipped}
+                                        onClick={() => handleProjectImageRemove(project.id, slotIndex)}
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                          <p className="mt-3 font-mono text-[8px] text-brand-text-warm/75 uppercase tracking-wider">
-                            This photo appears on the card and in the project view.
-                          </p>
+                          <h3 className="mt-3 font-syne font-extrabold text-lg uppercase tracking-tight text-brand-text-warm break-words">
+                            {project.title}
+                          </h3>
                         </div>
                       </div>
                     </div>
