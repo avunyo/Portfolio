@@ -1,0 +1,291 @@
+/* Base layer. Shipped with every generated site, before block CSS.
+   Everything here reads tokens; no raw colours. */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--pw-color-bg);
+  color: var(--pw-color-ink);
+  font-family: var(--pw-font-body);
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+img, svg, video { max-inline-size: 100%; block-size: auto; }
+a { color: var(--pw-color-primary); }
+:focus-visible { outline: 2px solid var(--pw-color-primary); outline-offset: 2px; }
+
+.pw-section__title {
+  font-family: var(--pw-font-display);
+  color: var(--pw-color-ink);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  text-align: center;
+  margin-block-end: var(--pw-space-3);
+  text-wrap: balance;
+}
+.pw-section__sub {
+  color: var(--pw-color-muted);
+  text-align: center;
+  max-inline-size: 56ch;
+  margin-inline: auto;
+  margin-block-end: var(--pw-space-6);
+}
+
+/* WCAG 2.2 · 2.5.8 Target Size (Minimum) applies to every interactive control. */
+.pw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  min-inline-size: var(--pw-target-min);
+  padding-inline: var(--pw-space-5);
+  border-radius: var(--pw-radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.pw-btn--primary { background: var(--pw-color-primary); color: var(--pw-color-primary-ink); }
+.pw-btn--primary:hover { filter: brightness(1.08); color: var(--pw-color-primary-ink); }
+.pw-btn--ghost { background: transparent; color: var(--pw-color-ink); border-color: var(--pw-color-line); }
+.pw-btn--ghost:hover { border-color: var(--pw-color-primary); color: var(--pw-color-primary); }
+.pw-btn--invert { background: var(--pw-color-surface); color: var(--pw-color-primary); }
+.pw-btn--invert:hover { filter: brightness(.96); color: var(--pw-color-primary); }
+
+.pw-visually-hidden {
+  position: absolute; inline-size: 1px; block-size: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* A skip link that stays clipped when focused is worse than no skip link:
+   the focus ring lands somewhere invisible. WCAG 2.2 / 2.4.11. */
+a.pw-visually-hidden:focus,
+a.pw-visually-hidden:focus-visible {
+  position: fixed;
+  inset-block-start: var(--pw-space-3);
+  inset-inline-start: var(--pw-space-3);
+  inline-size: auto; block-size: auto;
+  margin: 0; overflow: visible; clip-path: none;
+  z-index: 2000;
+  padding: var(--pw-space-3) var(--pw-space-4);
+  background: var(--pw-color-surface);
+  color: var(--pw-color-ink);
+  border: 2px solid var(--pw-color-primary);
+  border-radius: var(--pw-radius-sm);
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Layout utilities for the vanilla variants (stacks 1 and 2).
+   Bootstrap supplies its own equivalents in stack 3, so these are additive
+   and never fight it: distinct pw- prefix, no element selectors. */
+.pw-container {
+  inline-size: 100%;
+  max-inline-size: 1140px;
+  margin-inline: auto;
+  padding-inline: var(--pw-space-4);
+}
+.pw-grid { display: grid; gap: var(--pw-space-4); }
+@media (min-width: 768px) {
+  .pw-grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .pw-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .pw-grid--4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Form primitives. Shared by every block with a form, so they live here rather
+   than inside one block: booking-form previously inherited these from
+   contact-form-simple and rendered unstyled without it. */
+.pw-form { display: grid; gap: var(--pw-space-4); }
+.pw-field { display: grid; gap: var(--pw-space-2); }
+.pw-label { color: var(--pw-color-ink); font-weight: 600; font-size: .9375rem; }
+.pw-input {
+  inline-size: 100%;
+  padding: var(--pw-space-3);
+  min-block-size: 44px;
+  border: 1px solid var(--pw-color-line);
+  border-radius: var(--pw-radius-sm);
+  background: var(--pw-color-surface);
+  color: var(--pw-color-ink);
+  font: inherit;
+}
+.pw-input:focus-visible { outline: 2px solid var(--pw-color-primary); outline-offset: 1px; }
+.pw-form .pw-btn { justify-self: start; }
+
+/* Inline icons. The svg inherits colour from its container through
+   currentColor, so an icon never needs its own palette entry and cannot
+   drift out of contrast. .pw-icon__glyph is the letter shown when a copy
+   bank names an icon that does not exist. */
+.pw-icon__svg {
+  inline-size: 22px;
+  block-size: 22px;
+  display: block;
+}
+.pw-icon__glyph {
+  font-family: var(--pw-font-display);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Deliberately not sticky: this variant exists for sites where a persistent
+   bar would crowd the page. That also removes the 2.4.11 obscuring risk. */
+.pw-navc { background: var(--pw-color-surface); border-block-end: 1px solid var(--pw-color-line); }
+.pw-navc__inner { display: flex; flex-direction: column; align-items: center;
+  gap: var(--pw-space-3); padding-block: var(--pw-space-5); }
+.pw-navc__brand { font-family: var(--pw-font-display); font-weight: 600; font-size: 1.25rem;
+  color: var(--pw-color-primary); text-decoration: none;
+  min-block-size: var(--pw-target-min); display: inline-flex; align-items: center; }
+.pw-navc__links { list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--pw-space-2); }
+.pw-navc__link { color: var(--pw-color-muted); text-decoration: none;
+  min-block-size: var(--pw-target-min); display: inline-flex; align-items: center;
+  padding-inline: var(--pw-space-3); }
+.pw-navc__link:hover, .pw-navc__link:focus-visible { color: var(--pw-color-ink); }
+
+.pw-hero {
+  background: var(--pw-color-hero-bg);
+  padding-block: var(--pw-space-8);
+}
+.pw-hero__title {
+  font-family: var(--pw-font-display);
+  color: var(--pw-color-ink);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.1;
+  margin-block-end: var(--pw-space-4);
+  text-wrap: balance;
+}
+.pw-hero__sub {
+  color: var(--pw-color-muted);
+  font-size: 1.125rem;
+  max-inline-size: 46ch;
+  margin-block-end: var(--pw-space-5);
+}
+.pw-hero__actions { display: flex; flex-wrap: wrap; gap: var(--pw-space-3); }
+.pw-hero__media { inline-size: 100%; block-size: auto; border-radius: var(--pw-radius-lg); display: block; }
+
+.pw-alt { padding-block: var(--pw-space-8); }
+.pw-alt__list { display: grid; gap: var(--pw-space-5); max-inline-size: 56rem; margin-inline: auto; }
+.pw-alt__row { border-block-start: 1px solid var(--pw-color-line); padding-block-start: var(--pw-space-4); }
+.pw-alt__row:first-child { border-block-start: 0; padding-block-start: 0; }
+.pw-alt__title { font-family: var(--pw-font-display); font-size: 1.25rem;
+  color: var(--pw-color-ink); margin-block: 0 var(--pw-space-2); }
+.pw-alt__body { color: var(--pw-color-muted); margin: 0; max-inline-size: 62ch; }
+
+.pw-lgrid { padding-block: var(--pw-space-7); }
+.pw-lgrid__label { text-align: center; color: var(--pw-color-muted); font-size: .8125rem;
+  letter-spacing: .08em; text-transform: uppercase; margin-block: 0 var(--pw-space-5); }
+.pw-lgrid__list { list-style: none; margin: 0; padding: 0; display: grid;
+  gap: var(--pw-space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 640px) { .pw-lgrid__list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.pw-lgrid__item { text-align: center; font-family: var(--pw-font-display); font-weight: 600;
+  color: var(--pw-color-muted); border: 1px solid var(--pw-color-line);
+  border-radius: var(--pw-radius-sm); padding-block: var(--pw-space-4); }
+
+/* CSS scroll-snap: swipeable and keyboard-scrollable with no JavaScript,
+   which is why this block is available in stack 1. */
+.pw-scrollq { padding-block: var(--pw-space-8); }
+.pw-scrollq__track { list-style: none; margin: 0; padding: 0 0 var(--pw-space-3);
+  display: flex; gap: var(--pw-space-4); overflow-x: auto;
+  scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+.pw-scrollq__track:focus-visible { outline: 2px solid var(--pw-color-primary); outline-offset: 4px; }
+.pw-scrollq__item { flex: 0 0 min(22rem, 82%); scroll-snap-align: start;
+  background: var(--pw-color-surface); border: 1px solid var(--pw-color-line);
+  border-radius: var(--pw-radius-md); padding: var(--pw-space-5); }
+.pw-scrollq__text { margin-block: 0 var(--pw-space-3); }
+.pw-scrollq__text p { margin: 0; color: var(--pw-color-ink); }
+.pw-scrollq__by { color: var(--pw-color-muted); font-size: .9375rem; margin: 0; }
+
+.pw-ctas { padding-block: var(--pw-space-7); background: var(--pw-color-hero-bg); }
+.pw-ctas__inner { display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--pw-space-5); justify-content: space-between; }
+.pw-ctas__title { font-family: var(--pw-font-display); color: var(--pw-color-ink);
+  font-size: clamp(1.375rem, 2.6vw, 1.875rem); margin-block: 0 var(--pw-space-2);
+  text-wrap: balance; }
+.pw-ctas__sub { color: var(--pw-color-muted); margin: 0; max-inline-size: 48ch; }
+.pw-ctas__btn { flex: none; }
+
+.pw-footm { padding-block: var(--pw-space-6); border-block-start: 1px solid var(--pw-color-line); }
+.pw-footm__inner { display: flex; flex-wrap: wrap; gap: var(--pw-space-4);
+  align-items: center; justify-content: space-between; }
+.pw-footm__legal { color: var(--pw-color-muted); font-size: .875rem; margin: 0; }
+.pw-footm__links { list-style: none; margin: 0; padding: 0; display: flex;
+  flex-wrap: wrap; gap: var(--pw-space-2); }
+.pw-footm__link { color: var(--pw-color-muted); text-decoration: none; font-size: .875rem;
+  min-block-size: var(--pw-target-min); display: inline-flex; align-items: center;
+  padding-inline: var(--pw-space-2); }
+.pw-footm__link:hover, .pw-footm__link:focus-visible {
+  color: var(--pw-color-ink); text-decoration: underline; }
+
+.pw-pagehead { background: var(--pw-color-hero-bg); padding-block: var(--pw-space-7); }
+.pw-pagehead__title { font-family: var(--pw-font-display); color: var(--pw-color-ink);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin-block: 0 var(--pw-space-2); text-wrap: balance; }
+.pw-pagehead__sub { color: var(--pw-color-muted); margin: 0; max-inline-size: 56ch; }
+
+.pw-abouts { padding-block: var(--pw-space-8); }
+.pw-abouts__inner { display: grid; gap: var(--pw-space-7); }
+@media (min-width: 768px) { .pw-abouts__inner { grid-template-columns: 3fr 2fr; align-items: center; } }
+.pw-abouts__title { font-family: var(--pw-font-display); color: var(--pw-color-ink);
+  font-size: clamp(1.5rem, 3vw, 2rem); margin-block: 0 var(--pw-space-3); text-wrap: balance; }
+.pw-abouts__body { color: var(--pw-color-muted); margin: 0; max-inline-size: 52ch; }
+.pw-abouts__stats { list-style: none; margin: 0; padding: 0; display: grid;
+  gap: var(--pw-space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pw-abouts__value { font-family: var(--pw-font-display); font-size: 1.875rem;
+  color: var(--pw-color-primary); margin-block: 0 var(--pw-space-1);
+  font-variant-numeric: tabular-nums; }
+.pw-abouts__label { color: var(--pw-color-muted); font-size: .875rem; margin: 0; }
+
+.pw-team { padding-block: var(--pw-space-8); background: var(--pw-color-surface); }
+.pw-team__list { list-style: none; margin: 0; padding: 0; text-align: center; }
+.pw-person__monogram {
+  inline-size: 56px; block-size: 56px; border-radius: 50%;
+  background: var(--pw-color-primary); color: var(--pw-color-primary-ink);
+  font-family: var(--pw-font-display); font-size: 1.375rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto var(--pw-space-3);
+}
+.pw-person__name { font-family: var(--pw-font-display); font-size: 1.0625rem;
+  color: var(--pw-color-ink); margin-block: 0 var(--pw-space-1); }
+.pw-person__role { color: var(--pw-color-muted); font-size: .9375rem; margin: 0; }
+
+.pw-services { padding-block: var(--pw-space-8); }
+
+.pw-cmp { padding-block: var(--pw-space-8); background: var(--pw-color-surface); }
+/* Wide content scrolls in its own container so the page never scrolls sideways. */
+.pw-cmp__scroll { overflow-x: auto; }
+.pw-cmp__table { inline-size: 100%; border-collapse: collapse; min-inline-size: 32rem; }
+.pw-cmp__table th, .pw-cmp__table td { text-align: start; padding: var(--pw-space-3);
+  border-block-end: 1px solid var(--pw-color-line); }
+.pw-cmp__table thead th { font-family: var(--pw-font-display); color: var(--pw-color-muted);
+  text-transform: uppercase; letter-spacing: .06em; font-size: .8125rem; }
+.pw-cmp__table tbody th { font-family: var(--pw-font-display); color: var(--pw-color-ink); }
+.pw-cmp__price { font-variant-numeric: tabular-nums; color: var(--pw-color-ink); font-weight: 600; }
+.pw-cmp__period { color: var(--pw-color-muted); font-weight: 400; font-size: .875rem; }
+
+.pw-contacti { padding-block: var(--pw-space-8); }
+.pw-contacti__inner { text-align: center; max-inline-size: 44rem; margin-inline: auto; }
+.pw-contacti__title { font-family: var(--pw-font-display); color: var(--pw-color-ink);
+  font-size: clamp(1.5rem, 3vw, 2rem); margin-block: 0 var(--pw-space-3); }
+.pw-contacti__sub { color: var(--pw-color-muted); margin-block: 0 var(--pw-space-5); }
+.pw-contacti__list { list-style: none; margin: 0; padding: 0; display: flex;
+  flex-wrap: wrap; justify-content: center; gap: var(--pw-space-6); }
+.pw-contacti__key { display: block; color: var(--pw-color-muted); font-size: .8125rem;
+  text-transform: uppercase; letter-spacing: .06em; }
+.pw-contacti__val { color: var(--pw-color-primary); font-weight: 600;
+  min-block-size: var(--pw-target-min); display: inline-flex; align-items: center; }
+
+/* Authored on details/summary so the identical markup serves stack 1 with
+   no JavaScript at all. See meta.json nojs_fallback. */
+.pw-faq { padding-block: var(--pw-space-8); }
+.pw-faq__list { max-inline-size: 60ch; margin-inline: auto; }
+.pw-faq__item { border-block-end: 1px solid var(--pw-color-line); }
+.pw-faq__q {
+  font-family: var(--pw-font-display); color: var(--pw-color-ink);
+  padding-block: var(--pw-space-4); cursor: pointer;
+  min-block-size: var(--pw-target-min);
+}
+.pw-faq__q:focus-visible { outline: 2px solid var(--pw-color-primary); outline-offset: 2px; }
+.pw-faq__a { color: var(--pw-color-muted); padding-block-end: var(--pw-space-4); }
+.pw-faq__a p { margin: 0; }

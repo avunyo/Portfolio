@@ -1,0 +1,102 @@
+:root {
+  --pw-color-primary: #1F5C94;
+  --pw-color-primary-ink: #FFFFFF;
+  --pw-color-bg: #F5F7FA;
+  --pw-color-surface: #FFFFFF;
+  --pw-color-ink: #16202B;
+  --pw-color-muted: #5B6875;
+  --pw-color-line: #DDE4EC;
+  --pw-color-hero-bg: #E8EFF7;
+  --pw-font-display: 'Segoe UI Semibold', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --pw-font-body: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --pw-radius-sm: 4px;
+  --pw-radius-md: 8px;
+  --pw-radius-lg: 14px;
+  --pw-space-1: 4px;
+  --pw-space-2: 8px;
+  --pw-space-3: 12px;
+  --pw-space-4: 16px;
+  --pw-space-5: 24px;
+  --pw-space-6: 32px;
+  --pw-space-7: 48px;
+  --pw-space-8: 72px;
+  --pw-shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+  --pw-shadow-md: 0 4px 16px rgba(16,24,40,.10);
+  --pw-target-min: 24px;
+  --bs-primary: #1F5C94;
+  --bs-body-bg: #F5F7FA;
+  --bs-body-color: #16202B;
+  --bs-border-color: #DDE4EC;
+  --bs-secondary-color: #5B6875;
+  --bs-body-font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --bs-border-radius: 8px;
+}
+/* Dark mode: same tokens, redefined. Bootstrap components follow --bs-* for free. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-bs-theme="light"]) {
+    --pw-color-primary: #5A9BD8;
+    --pw-color-primary-ink: #0B1219;
+    --pw-color-bg: #0F1620;
+    --pw-color-surface: #161F2B;
+    --pw-color-ink: #E3EAF2;
+    --pw-color-muted: #93A2B2;
+    --pw-color-line: #26313F;
+    --pw-color-hero-bg: #17222F;
+    --pw-font-display: 'Segoe UI Semibold', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    --pw-font-body: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    --pw-radius-sm: 4px;
+    --pw-radius-md: 8px;
+    --pw-radius-lg: 14px;
+    --pw-space-1: 4px;
+    --pw-space-2: 8px;
+    --pw-space-3: 12px;
+    --pw-space-4: 16px;
+    --pw-space-5: 24px;
+    --pw-space-6: 32px;
+    --pw-space-7: 48px;
+    --pw-space-8: 72px;
+    --pw-shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+    --pw-shadow-md: 0 4px 16px rgba(16,24,40,.10);
+    --pw-target-min: 24px;
+    --bs-primary: #5A9BD8;
+    --bs-body-bg: #0F1620;
+    --bs-body-color: #E3EAF2;
+    --bs-border-color: #26313F;
+    --bs-secondary-color: #93A2B2;
+    --bs-body-font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    --bs-border-radius: 8px;
+  }
+}
+[data-bs-theme="dark"] {
+  --pw-color-primary: #5A9BD8;
+  --pw-color-primary-ink: #0B1219;
+  --pw-color-bg: #0F1620;
+  --pw-color-surface: #161F2B;
+  --pw-color-ink: #E3EAF2;
+  --pw-color-muted: #93A2B2;
+  --pw-color-line: #26313F;
+  --pw-color-hero-bg: #17222F;
+  --pw-font-display: 'Segoe UI Semibold', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --pw-font-body: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --pw-radius-sm: 4px;
+  --pw-radius-md: 8px;
+  --pw-radius-lg: 14px;
+  --pw-space-1: 4px;
+  --pw-space-2: 8px;
+  --pw-space-3: 12px;
+  --pw-space-4: 16px;
+  --pw-space-5: 24px;
+  --pw-space-6: 32px;
+  --pw-space-7: 48px;
+  --pw-space-8: 72px;
+  --pw-shadow-sm: 0 1px 2px rgba(16,24,40,.06);
+  --pw-shadow-md: 0 4px 16px rgba(16,24,40,.10);
+  --pw-target-min: 24px;
+  --bs-primary: #5A9BD8;
+  --bs-body-bg: #0F1620;
+  --bs-body-color: #E3EAF2;
+  --bs-border-color: #26313F;
+  --bs-secondary-color: #93A2B2;
+  --bs-body-font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --bs-border-radius: 8px;
+}
