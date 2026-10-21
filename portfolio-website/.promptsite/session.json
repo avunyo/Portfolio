@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "corpus": "cd197bfce69e07c758bcbdbce501a08d4623b4d2f25a41a57b20ba588c3a20a6",
+  "extension": "0.2.0",
+  "stack": "bootstrap",
+  "steps": [
+    {
+      "id": 1,
+      "text": "Make my existing website at localhost much better",
+      "enabled": true
+    }
+  ],
+  "manualEditsDetected": false,
+  "fileHashes": {}
+}
