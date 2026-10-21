@@ -411,7 +411,7 @@ export default function Work({ data, photoUrl, onChange }: WorkProps) {
                     className="absolute inset-0 w-full h-full object-cover opacity-40"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_35%,rgba(168,34,58,0.38),transparent_45%),linear-gradient(135deg,#2D0A10_0%,#1A0508_75%)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_35%,rgba(168,34,58,0.38),transparent_45%),linear-gradient(135deg,#2B0F17_0%,#1F0A10_75%)]" />
                 )}
                 <div className="project-feature-grain absolute inset-0" />
                 <div className={`project-artwork project-artwork-${selectedIndex + 1}${selectedProject.image || photoUrl ? " has-photo" : ""}`} aria-hidden="true">

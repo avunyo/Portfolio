@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { MotionConfig } from "motion/react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { PortfolioData } from "./types";
 import { DEFAULT_PORTFOLIO_DATA } from "./data";
@@ -77,15 +78,23 @@ export default function App() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [navHidden, setNavHidden] = useState(false);
 
   useEffect(() => {
     let frameId = 0;
+    let lastScrollY = window.scrollY;
     const updateProgress = () => {
       if (frameId) return;
       frameId = requestAnimationFrame(() => {
         frameId = 0;
         const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
         setScrollProgress(scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0);
+        // Tuck the nav away while scrolling down, bring it back on any scroll up.
+        const delta = window.scrollY - lastScrollY;
+        if (Math.abs(delta) > 6) {
+          setNavHidden(delta > 0 && window.scrollY > 160);
+          lastScrollY = window.scrollY;
+        }
       });
     };
 
@@ -138,12 +147,13 @@ export default function App() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div id="crimson-luxury-dossier" className="min-h-screen bg-brand-bg-deep text-[#F5E8E0] relative selection:bg-brand-crimson selection:text-white">
-      
+
       {/* FIXED NAVIGATION (Solid Cream Board as requested by the uploaded color block concept) */}
-      <nav 
+      <nav
         id="navigation-bar"
-        className="fixed top-0 left-0 right-0 z-30 bg-[#F5E8E0] border-b border-brand-crimson/25 py-3 select-none transition-all duration-300 shadow-md"
+        className={`fixed top-0 left-0 right-0 z-30 bg-[#F5E8E0] border-b border-brand-crimson/25 py-3 select-none shadow-md${navHidden && !mobileMenuOpen ? " is-hidden" : ""}`}
       >
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-brand-crimson/10" aria-hidden="true">
           <div
@@ -272,13 +282,7 @@ export default function App() {
       <main id="primary-viewport">
         
         {/* HERO SECTION */}
-        <ScrollReveal id="hero-reveal" delayMs={100}>
-          <Hero 
-            data={data} 
-            photoUrl={photoUrl} 
-            onPhotoUpload={handlePhotoUpload} 
-          />
-        </ScrollReveal>
+        <Hero data={data} />
 
         {/* WHAT? SECTION */}
         <ScrollReveal id="work-reveal" delayMs={150}>
@@ -337,5 +341,6 @@ export default function App() {
       />
 
     </div>
+    </MotionConfig>
   );
 }
