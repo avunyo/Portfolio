@@ -14,8 +14,8 @@
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse 42% 60% at 80% 62%, rgba(154, 34, 54, 0.24), transparent 70%),
-    linear-gradient(170deg, #2A0D16 0%, #1C080D 55%, #140609 100%);
+    radial-gradient(circle 450px at 78% 68%, rgba(154, 34, 54, 0.34), transparent),
+    linear-gradient(160deg, #2A0D16 0%, #1C080D 55%, #120508 100%);
 }
 
 .hero-grid-lines {
@@ -23,8 +23,8 @@
   z-index: 0;
   inset: 0;
   background-image:
-    linear-gradient(rgba(248, 236, 228, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(248, 236, 228, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(248, 236, 228, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248, 236, 228, 0.06) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 75% 70% at 60% 45%, #000 30%, transparent 85%);
   pointer-events: none;
@@ -36,8 +36,7 @@
   z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  padding-top: 112px;
-  padding-bottom: 72px;
+  padding: 140px 24px 58px;
 }
 
 .hero-copy-column {
@@ -51,9 +50,9 @@
   width: fit-content;
   max-width: 100%;
   padding: clamp(28px, 3.6vw, 52px) clamp(24px, 3.8vw, 56px);
-  border: 1px solid rgba(248, 236, 228, 0.1);
-  background: linear-gradient(160deg, rgba(43, 15, 23, 0.55), rgba(20, 6, 9, 0.35));
-  backdrop-filter: blur(4px);
+  border: 1px solid rgba(248, 236, 228, 0.12);
+  background: linear-gradient(155deg, rgba(43, 15, 23, 0.92), rgba(20, 6, 10, 0.86));
+  backdrop-filter: blur(8px);
   animation: heroFadeIn 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -95,12 +94,12 @@
 .hero-eyebrow {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 10px;
   color: var(--hero-text-soft);
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
 }
 
 .hero-live-dot {
@@ -121,26 +120,27 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: clamp(20px, 2.6vw, 34px) 0 0;
+  margin: 30px 0 0;
   line-height: 0.9;
 }
 
 .hero-title-intro {
   color: var(--hero-text-soft);
   font-family: var(--font-sans);
-  font-size: clamp(21px, 2.2vw, 32px);
+  font-size: clamp(21px, 2.1vw, 30px);
   font-weight: 300;
+  line-height: 1.2;
   letter-spacing: -0.03em;
 }
 
 .hero-title-name {
   display: block;
-  margin-top: 0.12em;
+  margin-top: 10px;
   color: var(--hero-text);
   font-family: var(--font-syne);
-  font-size: clamp(64px, 8.6vw, 138px);
+  font-size: clamp(64px, 8.4vw, 120px);
   font-weight: 800;
-  letter-spacing: -0.075em;
+  letter-spacing: -0.07em;
   white-space: nowrap;
 }
 
@@ -167,7 +167,7 @@ i.hero-letter {
   display: block;
   width: min(48%, 320px);
   height: 1px;
-  margin-top: 0.6rem;
+  margin-top: 14px;
   background: linear-gradient(90deg, var(--hero-accent), rgba(229, 83, 107, 0));
   transform-origin: left;
   animation: ruleGrow 1s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -178,8 +178,8 @@ i.hero-letter {
 }
 
 .hero-bio {
-  max-width: 32em;
-  margin: 1.5rem 0 0;
+  max-width: 560px;
+  margin: 26px 0 0;
   color: var(--hero-text-soft);
   font-size: clamp(16px, 1.25vw, 18px);
   font-weight: 300;
@@ -190,21 +190,21 @@ i.hero-letter {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 1.9rem;
+  margin-top: 32px;
 }
 
 .hero-primary-link,
 .hero-secondary-link {
   display: inline-flex;
-  min-height: 50px;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding: 14px 22px;
+  padding: 17px 22px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  line-height: 1.4;
+  letter-spacing: 0.16em;
   text-decoration: none;
   transition:
     background-color 300ms ease,
@@ -215,7 +215,7 @@ i.hero-letter {
 }
 
 .hero-primary-link {
-  border: 1px solid #C23A55;
+  border: 1px solid rgba(229, 83, 107, 0.6);
   background: #A8223A;
   color: #FFF4EE;
 }
@@ -261,11 +261,46 @@ i.hero-letter {
 
 .hero-note {
   display: block;
-  margin-top: 2rem;
+  margin-top: 34px;
   color: rgba(248, 236, 228, 0.55);
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  z-index: 2;
+  bottom: 40px;
+  left: max(24px, calc((100vw - 1280px) / 2 + 56px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(248, 236, 228, 0.5);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  transition: color 300ms ease;
+  animation: heroFadeIn 0.8s ease 1.2s both;
+}
+
+.hero-scroll-hint > span {
+  width: 40px;
+  height: 1px;
+  background: var(--hero-accent);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-scroll-hint:hover {
+  color: var(--hero-text);
+}
+
+.hero-scroll-hint:hover > span {
+  transform: scaleX(1.4);
 }
 
 /* Figure */
@@ -325,9 +360,9 @@ i.hero-letter {
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+  /* No vector-effect: non-scaling-stroke here, it measures dashes in screen pixels and breaks pathLength=1. */
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 6px rgba(229, 83, 107, 0.35));
   animation:
     figureDraw 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards,
@@ -394,30 +429,20 @@ i.hero-letter {
   animation: ruleGrow 900ms cubic-bezier(0.16, 1, 0.3, 1) 300ms both;
 }
 
-#work-section {
-  background-image:
-    radial-gradient(ellipse 50% 40% at 15% 20%, rgba(154, 34, 54, 0.1), transparent 70%),
-    linear-gradient(180deg, #140609, var(--color-brand-bg-deep) 30%);
-}
-
 #about-section {
-  background-image:
-    radial-gradient(ellipse 45% 55% at 90% 30%, rgba(154, 34, 54, 0.14), transparent 70%),
-    linear-gradient(180deg, #250C14, #200A11);
+  background-image: linear-gradient(180deg, #2A0D16, #200A11);
 }
 
 #contact-section {
-  background-image:
-    radial-gradient(ellipse 60% 55% at 50% 100%, rgba(154, 34, 54, 0.14), transparent 70%),
-    linear-gradient(180deg, var(--color-brand-bg-deep), #160609);
+  background-image: linear-gradient(180deg, var(--color-brand-bg-deep), var(--color-brand-bg-deepest));
 }
 
-.scroll-reveal.is-visible #contact-channels-grid > a {
+.scroll-reveal.is-visible #contact-channels-grid > * {
   animation: cardEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.scroll-reveal.is-visible #contact-channels-grid > a:nth-child(2) { animation-delay: 100ms; }
-.scroll-reveal.is-visible #contact-channels-grid > a:nth-child(3) { animation-delay: 200ms; }
+.scroll-reveal.is-visible #contact-channels-grid > *:nth-child(2) { animation-delay: 100ms; }
+.scroll-reveal.is-visible #contact-channels-grid > *:nth-child(3) { animation-delay: 200ms; }
 
 #navigation-bar {
   transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -444,10 +469,10 @@ i.hero-letter {
     justify-content: flex-start;
   }
 
+  /* Mobile mockup: card 28px under the 58px nav, 16px side margins. */
   .hero-stage-layout {
     grid-template-columns: minmax(0, 1fr);
-    padding-top: 96px;
-    padding-bottom: 8px;
+    padding: 86px 16px 0;
   }
 
   .hero-copy-column {
@@ -460,30 +485,62 @@ i.hero-letter {
   }
 
   .hero-eyebrow {
+    gap: 8px;
     font-size: 10px;
     letter-spacing: 0.12em;
   }
 
+  .hero-title {
+    margin-top: 20px;
+  }
+
+  .hero-title-intro {
+    font-size: 22px;
+  }
+
   .hero-title-name {
-    font-size: clamp(54px, 17vw, 84px);
+    margin-top: 6px;
+    font-size: clamp(44px, 13.4vw, 64px);
+  }
+
+  .hero-title-rule {
+    width: 180px;
+    margin-top: 10px;
   }
 
   .hero-bio {
+    margin-top: 18px;
     font-size: 16px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 22px;
   }
 
   .hero-primary-link,
   .hero-secondary-link {
-    flex: 1 1 auto;
+    width: 100%;
+    padding-block: 16px;
+  }
+
+  .hero-note {
+    margin-top: 20px;
+    font-size: 10px;
+  }
+
+  .hero-scroll-hint {
+    display: none;
   }
 
   .hero-figure {
     position: relative;
     top: auto;
     right: auto;
-    width: min(72%, 300px);
-    height: 300px;
-    margin: 12px auto 0;
+    width: 200px;
+    height: 310px;
+    margin: 29px auto 0;
   }
 }
 
@@ -500,7 +557,7 @@ i.hero-letter {
   .hero-figure-echo,
   .scroll-reveal.is-visible h2,
   .scroll-reveal.is-visible [id$="-eyebrow"] > div,
-  .scroll-reveal.is-visible #contact-channels-grid > a {
+  .scroll-reveal.is-visible #contact-channels-grid > * {
     animation: none;
   }
 

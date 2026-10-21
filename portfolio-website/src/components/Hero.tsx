@@ -18,7 +18,7 @@ export default function Hero({ data }: HeroProps) {
     <section id="hero-section" className="hero-stage">
       <div className="hero-grid-lines" aria-hidden="true" />
 
-      <div className="hero-stage-layout container mx-auto px-6 md:px-12 xl:px-20">
+      <div className="hero-stage-layout">
         <div className="hero-copy-column">
           <div className="hero-copy">
             <div className="hero-eyebrow hero-fade-in" style={{ animationDelay: "100ms" }}>
@@ -73,12 +73,13 @@ export default function Hero({ data }: HeroProps) {
         <span className="hero-figure-glow" />
         <svg className="hero-figure-svg" viewBox="0 0 400 620" preserveAspectRatio="xMidYMax meet">
           <defs>
-            <linearGradient id="hero-figure-stroke" x1="0" y1="0" x2="0" y2="1">
+            {/* userSpaceOnUse: one gradient across the whole figure (light head, crimson shoulders), as in the mockup. */}
+            <linearGradient id="hero-figure-stroke" x1="200" y1="40" x2="200" y2="620" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#F3DDD3" />
               <stop offset="45%" stopColor="#E5536B" />
               <stop offset="100%" stopColor="#9A2236" />
             </linearGradient>
-            <linearGradient id="hero-figure-fill" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="hero-figure-fill" x1="200" y1="40" x2="200" y2="620" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#E5536B" stopOpacity="0.1" />
               <stop offset="100%" stopColor="#1F0A10" stopOpacity="0" />
             </linearGradient>
@@ -94,6 +95,11 @@ export default function Hero({ data }: HeroProps) {
           </g>
         </svg>
       </div>
+
+      <a href="#work-section" className="hero-scroll-hint" aria-label="Nach unten scrollen">
+        <span aria-hidden="true" />
+        SCROLL
+      </a>
     </section>
   );
 }

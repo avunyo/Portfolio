@@ -71,11 +71,6 @@ export default function App() {
     return DEFAULT_PORTFOLIO_DATA;
   });
 
-  // Load photo
-  const [photoUrl, setPhotoUrl] = useState<string | null>(() => {
-    return localStorage.getItem("crimson_portfolio_photo");
-  });
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navHidden, setNavHidden] = useState(false);
@@ -124,20 +119,10 @@ export default function App() {
     }
   };
 
-  const handlePhotoUpload = (base64: string) => {
-    setPhotoUrl(base64);
-    try {
-      localStorage.setItem("crimson_portfolio_photo", base64);
-    } catch (err) {
-      console.warn("Storage quota limit exceeded. Base64 photo too large for localStorage.", err);
-      alert("Note: This image files is stored in active memory but could not fit in the browser's persistent localStorage cache. It will work beautifully for this session!");
-    }
-  };
-
   const handleReset = () => {
     setData(DEFAULT_PORTFOLIO_DATA);
-    setPhotoUrl(null);
     localStorage.removeItem("crimson_portfolio_state");
+    // Left over from the removed profile photo; cleared so old uploads don't linger in storage.
     localStorage.removeItem("crimson_portfolio_photo");
   };
 
@@ -148,12 +133,12 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <div id="crimson-luxury-dossier" className="min-h-screen bg-brand-bg-deep text-[#F5E8E0] relative selection:bg-brand-crimson selection:text-white">
+    <div id="crimson-luxury-dossier" className="min-h-screen bg-brand-bg-deepest text-brand-text-warm relative selection:bg-brand-crimson selection:text-white">
 
       {/* FIXED NAVIGATION (Solid Cream Board as requested by the uploaded color block concept) */}
       <nav
         id="navigation-bar"
-        className={`fixed top-0 left-0 right-0 z-30 bg-[#F5E8E0] border-b border-brand-crimson/25 py-3 select-none shadow-md${navHidden && !mobileMenuOpen ? " is-hidden" : ""}`}
+        className={`fixed top-0 left-0 right-0 z-30 bg-brand-cream select-none shadow-[0_4px_18px_rgba(0,0,0,0.25)]${navHidden && !mobileMenuOpen ? " is-hidden" : ""}`}
       >
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-brand-crimson/10" aria-hidden="true">
           <div
@@ -161,13 +146,13 @@ export default function App() {
             style={{ transform: `scaleX(${scrollProgress})` }}
           />
         </div>
-        <div className="container mx-auto px-6 md:px-12 xl:px-20 flex items-center justify-between">
+        <div className="container mx-auto px-5 md:px-12 xl:px-20 h-[58px] md:h-[72px] flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
           
           {/* LOGO */}
           <a
             id="nav-logo"
             href="#"
-            className="font-syne font-black text-sm sm:text-base md:text-lg tracking-tight text-[#1A0508] hover:text-brand-crimson transition-colors cursor-pointer whitespace-nowrap"
+            className="font-syne font-extrabold text-base md:text-lg tracking-tight text-brand-bg-deep hover:text-brand-crimson transition-colors cursor-pointer whitespace-nowrap"
           >
             Hi, my name is...
           </a>
@@ -175,7 +160,7 @@ export default function App() {
           {/* DESKTOP LINKS */}
           <div 
             id="desktop-nav-links"
-            className="hidden md:flex items-center gap-8 font-mono text-[13px] tracking-wider uppercase font-black text-[#1A0508]"
+            className="hidden md:flex items-center gap-9 font-mono text-xs tracking-[0.16em] uppercase font-bold text-brand-bg-deep"
           >
             <a
               href="#work-section"
@@ -198,14 +183,14 @@ export default function App() {
           </div>
 
           {/* RIGHT SIDE INTEGRATIONS (Soundscape + CTA) */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center justify-end gap-[22px]">
             {/* Surprise Custom Auditory soundscape */}
             <AmbientSoundscape />
 
             <a
               id="desktop-nav-cta"
               href="#contact-section"
-              className="px-5 py-2.5 bg-[#1A0508] hover:bg-brand-crimson text-[#F5E8E0] hover:text-white font-mono text-xs tracking-widest font-black uppercase cursor-pointer transition-all duration-300 border border-transparent shadow-sm"
+              className="px-[18px] py-3 bg-brand-bg-deep hover:bg-brand-crimson text-brand-text-warm hover:text-white font-mono text-xs tracking-[0.16em] font-bold uppercase cursor-pointer transition-all duration-300 border border-transparent shadow-sm"
               style={{ borderRadius: "2px" }}
             >
               Say hello
@@ -214,14 +199,13 @@ export default function App() {
 
           {/* HAMBURGER TRIGGER */}
           <div className="flex items-center gap-4 md:hidden">
-            {mobileMenuOpen ? null : <AmbientSoundscape />}
             <button
               id="mobile-nav-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1 text-[#1A0508] hover:text-brand-crimson cursor-pointer"
+              className="text-brand-bg-deep hover:text-brand-crimson cursor-pointer"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-[22px] h-[22px]" /> : <Menu className="w-[22px] h-[22px]" />}
             </button>
           </div>
 
@@ -262,6 +246,9 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-4">
+            <div className="self-center">
+              <AmbientSoundscape tone="onDark" />
+            </div>
               <a
               id="mobile-menu-cta"
               href="#contact-section"
@@ -286,7 +273,7 @@ export default function App() {
 
         {/* WHAT? SECTION */}
         <ScrollReveal id="work-reveal" delayMs={150}>
-          <Work data={data} photoUrl={photoUrl} onChange={handleDataChange} />
+          <Work data={data} onChange={handleDataChange} />
         </ScrollReveal>
 
         {/* WHO? SECTION */}
@@ -304,16 +291,16 @@ export default function App() {
       {/* FOOTER */}
       <footer 
         id="editorial-footer"
-        className="bg-brand-bg-dark border-t border-brand-wine-light/35 py-12 text-brand-text-muted select-none"
+        className="bg-brand-bg-deepest border-t border-brand-line py-8 md:py-11 text-brand-text-muted select-none"
       >
-        <div className="container mx-auto px-6 md:px-12 xl:px-20 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div className="section-shell flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8">
           
           {/* Left Column Copyright metadata */}
-          <div className="md:col-span-6 text-center md:text-left" id="footer-cr">
-            <p className="font-mono text-[10px] tracking-widest uppercase">
-              &copy; {new Date().getFullYear()} {data.name}.               ALLE RECHTE VORBEHALTEN.
+          <div id="footer-cr">
+            <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.16em] uppercase">
+              &copy; {new Date().getFullYear()} {data.name.toUpperCase()}. ALLE RECHTE VORBEHALTEN.
             </p>
-            <p className="font-mono text-[8px] text-brand-text-muted/65 uppercase tracking-[0.15em] mt-1">
+            <p className="hidden md:block font-mono text-[11px] font-medium text-brand-text-muted/60 uppercase tracking-[0.16em] mt-1.5">
               EINE KLEINE SAMMLUNG MEINER IDEEN UND PROJEKTE
             </p>
           </div>
@@ -321,7 +308,7 @@ export default function App() {
           {/* Right Column Nav Links */}
           <div 
             id="footer-fast-links"
-            className="md:col-span-6 flex flex-wrap justify-center md:justify-end gap-6 md:gap-10 font-mono text-[9px] tracking-widest uppercase font-medium"
+            className="order-first md:order-none flex flex-wrap gap-7 md:gap-10 font-mono text-[11px] tracking-[0.16em] uppercase font-medium"
           >
             <a href="#work-section" className="hover:text-brand-text-warm transition-colors cursor-pointer">WHAT?</a>
             <a href="#about-section" className="hover:text-brand-text-warm transition-colors cursor-pointer">WHO?</a>
@@ -336,8 +323,6 @@ export default function App() {
         data={data} 
         onChange={handleDataChange} 
         onReset={handleReset} 
-        onPhotoUpload={handlePhotoUpload}
-        photoUrl={photoUrl}
       />
 
     </div>

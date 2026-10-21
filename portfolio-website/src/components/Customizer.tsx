@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Sliders, X, RotateCcw, Check, Upload } from "lucide-react";
+import { useState } from "react";
+import { Sliders, X, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PortfolioData } from "../types";
 
@@ -7,16 +7,12 @@ interface CustomizerProps {
   data: PortfolioData;
   onChange: (newData: PortfolioData) => void;
   onReset: () => void;
-  onPhotoUpload: (base64: string) => void;
-  photoUrl: string | null;
 }
 
 export default function Customizer({
   data,
   onChange,
   onReset,
-  onPhotoUpload,
-  photoUrl,
 }: CustomizerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,20 +39,6 @@ export default function Customizer({
       ...data,
       projects: updatedProjects,
     });
-  };
-
-  // Handle Photo file reading
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          onPhotoUpload(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   return (
@@ -128,45 +110,6 @@ export default function Customizer({
                     <RotateCcw className="w-3 h-3" />
                     Auf Anfang zurücksetzen
                   </button>
-                </div>
-
-                {/* Profile Image upload box */}
-                <div>
-                  <label className="block font-mono text-[10px] text-brand-text-muted tracking-[0.15em] uppercase mb-2">
-                    Profilfoto
-                  </label>
-                  <div 
-                    className="border border-dashed border-brand-wine-light p-4 text-center cursor-pointer bg-brand-bg-deep/40 hover:border-brand-crimson-bright transition-colors"
-                    style={{ borderRadius: "2px" }}
-                  >
-                    {photoUrl ? (
-                      <div className="mb-3 relative w-16 h-16 mx-auto border border-brand-crimson">
-                        <img 
-                          referrerPolicy="no-referrer"
-                          src={photoUrl} 
-                          alt="preview" 
-                          className="w-full h-full object-cover" 
-                        />
-                        <div className="absolute inset-0 bg-brand-bg-deep/40 flex items-center justify-center font-mono text-[8px] uppercase">
-                          Geladen
-                        </div>
-                      </div>
-                    ) : (
-                      <Upload className="w-6 h-6 mx-auto text-brand-text-muted mb-2" />
-                    )}
-                    <label className="cursor-pointer text-brand-crimson-bright hover:text-brand-text-warm font-mono text-[11px] uppercase tracking-wider block">
-                      Foto auswählen
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleFileChange} 
-                        className="hidden" 
-                      />
-                    </label>
-                    <span className="text-[10px] text-brand-text-muted/65 block mt-1">
-                      JPG- oder PNG-Datei. Bleibt in diesem Browser.
-                    </span>
-                  </div>
                 </div>
 
                 {/* Field Header */}

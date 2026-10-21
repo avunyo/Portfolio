@@ -1,0 +1,667 @@
+/* Sections below the hero, following the Figma mockup (Desktop — 1440 / Mobile — 390). */
+
+/* Content width from the mockup: 136px sides at 1440 (1168px content), 20px on phones. */
+.section-shell {
+  padding-inline: max(20px, 5%, calc((100% - 1168px) / 2));
+}
+
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--color-brand-crimson-bright);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.section-eyebrow > div {
+  width: 48px;
+  height: 1px;
+  background: var(--color-brand-wine-light);
+}
+
+.section-title {
+  margin-top: 22px;
+  color: var(--color-brand-text-warm);
+  font-family: var(--font-syne);
+  font-size: clamp(54px, 6.1vw, 88px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* Desktop mockup keeps "LASS UNS REDEN" on one line; phones break it after "UNS". */
+.contact-title {
+  margin-top: 26px;
+}
+
+@media (min-width: 1024px) {
+  .contact-title {
+    white-space: nowrap;
+  }
+}
+
+/* WHAT? */
+
+.work-section {
+  padding: clamp(72px, 8.4vw, 120px) 0;
+  background: linear-gradient(180deg, var(--color-brand-bg-deepest), var(--color-brand-bg-deep) 35%);
+}
+
+.work-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.work-header-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 22px;
+}
+
+.work-header-aside p {
+  max-width: 300px;
+  color: var(--color-brand-text-soft);
+  font-size: 15px;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.work-arrows {
+  display: flex;
+  gap: 10px;
+}
+
+.work-arrows button {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid rgba(248, 236, 228, 0.6);
+  color: var(--color-brand-text-warm);
+  cursor: pointer;
+  transition: border-color 300ms ease, background-color 300ms ease, color 300ms ease;
+}
+
+.work-arrows button:hover:not(:disabled) {
+  border-color: var(--color-brand-crimson-bright);
+  background: rgba(168, 34, 58, 0.18);
+}
+
+.work-arrows button:disabled {
+  border-color: rgba(248, 236, 228, 0.25);
+  color: rgba(248, 236, 228, 0.4);
+  cursor: default;
+}
+
+.work-arrows svg {
+  width: 16px;
+  height: 16px;
+}
+
+.work-rail {
+  position: relative;
+  display: grid;
+  grid-auto-columns: calc((100% - 72px) / 4);
+  grid-auto-flow: column;
+  gap: 24px;
+  margin: 48px -8px 0;
+  padding: 8px;
+  overflow-x: auto;
+  scroll-padding-inline: 8px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  outline: none;
+}
+
+.work-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.work-rail:focus-visible {
+  outline: 1px solid var(--color-brand-crimson-bright);
+  outline-offset: 2px;
+}
+
+.work-card {
+  position: relative;
+  display: flex;
+  height: 400px;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 20px 20px 22px;
+  border: 1px solid rgba(248, 236, 228, 0.12);
+  border-radius: 4px;
+  background: var(--color-brand-bg-dark);
+  color: var(--color-brand-text-warm);
+  cursor: pointer;
+  scroll-snap-align: start;
+  text-align: left;
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.is-visible .work-card {
+  animation: cardEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.work-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 6, 10, 0.45) 0%,
+    rgba(20, 6, 10, 0.1) 30%,
+    rgba(20, 6, 10, 0.75) 55%,
+    rgba(20, 6, 10, 0.97) 100%
+  );
+  transition: opacity 300ms ease;
+}
+
+.work-card-top {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(248, 236, 228, 0.8);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.work-card-mark {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid rgba(248, 236, 228, 0.4);
+  border-radius: 50%;
+  background: rgba(18, 5, 8, 0.35);
+  transition: background-color 300ms ease, border-color 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-card-mark svg {
+  width: 14px;
+  height: 14px;
+}
+
+.work-card-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.work-card-tags {
+  color: rgba(248, 236, 228, 0.7);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.work-card-title {
+  font-family: var(--font-syne);
+  font-size: clamp(16px, 1.45vw, 21px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.work-card-title.is-long {
+  font-size: clamp(13px, 1.1vw, 16px);
+}
+
+.work-card-description {
+  color: rgba(230, 210, 200, 0.85);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.work-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 236, 228, 0.15);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  transition: color 300ms ease;
+}
+
+.work-card-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Active = hovered, focused or picked with the arrows (the "Hover" variant in Figma). */
+.work-card.is-active,
+.work-card:focus-visible {
+  border-color: rgba(229, 83, 107, 0.9);
+  outline: none;
+  box-shadow: 0 0 28px rgba(229, 83, 107, 0.35), 0 22px 44px rgba(0, 0, 0, 0.45);
+}
+
+.work-card.is-active .work-card-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 6, 10, 0.45) 0%,
+    rgba(20, 6, 10, 0) 30%,
+    rgba(20, 6, 10, 0.75) 55%,
+    rgba(20, 6, 10, 0.97) 100%
+  );
+}
+
+.work-card.is-active .work-card-mark {
+  border-color: rgba(248, 236, 228, 0.9);
+  background: var(--color-brand-crimson);
+}
+
+.work-card.is-active .work-card-cta {
+  color: var(--color-brand-crimson-bright);
+}
+
+.work-rail-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 48px;
+  color: rgba(248, 236, 228, 0.7);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.work-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.work-progress-track {
+  position: relative;
+  width: 240px;
+  height: 2px;
+  background: var(--color-brand-wine-light);
+}
+
+.work-progress-track > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--color-brand-crimson-bright);
+  transition: width 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-hint {
+  color: var(--color-brand-text-muted);
+}
+
+/* Phone pager from the mobile mockup: a 24px active bar and 6px dots. */
+.work-pager {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.work-pager > span {
+  width: 6px;
+  height: 2px;
+  background: var(--color-brand-wine-light);
+  transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease;
+}
+
+.work-pager > span.is-active {
+  width: 24px;
+  background: var(--color-brand-crimson-bright);
+}
+
+/* Project dialog: details and the photo uploads that used to live on the card back. */
+
+.work-dialog-backdrop {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  /* Flex + auto margins center the dialog but keep its top reachable when it is taller than the screen. */
+  display: flex;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(10, 3, 5, 0.78);
+  backdrop-filter: blur(6px);
+  animation: dialogFade 300ms ease both;
+}
+
+.work-dialog {
+  display: grid;
+  width: min(100%, 980px);
+  margin: auto;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  overflow: hidden;
+  border: 1px solid rgba(229, 83, 107, 0.5);
+  border-radius: 4px;
+  background: var(--color-brand-bg-deep);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  animation: dialogRise 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes dialogFade {
+  from { opacity: 0; }
+}
+
+@keyframes dialogRise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+.work-dialog-cover {
+  min-height: 320px;
+  background: var(--color-brand-bg-dark);
+}
+
+.work-dialog-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 32px 32px;
+}
+
+.work-dialog-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(248, 236, 228, 0.8);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.work-dialog-top button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(248, 236, 228, 0.3);
+  color: var(--color-brand-text-warm);
+  cursor: pointer;
+  transition: border-color 300ms ease, background-color 300ms ease;
+}
+
+.work-dialog-top button:hover {
+  border-color: var(--color-brand-crimson-bright);
+  background: rgba(168, 34, 58, 0.2);
+}
+
+.work-dialog-top svg {
+  width: 18px;
+  height: 18px;
+}
+
+.work-dialog-content h3 {
+  font-family: var(--font-syne);
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.work-dialog-content h3.is-long {
+  font-size: clamp(20px, 2.2vw, 28px);
+}
+
+.work-dialog-content p {
+  max-width: 34em;
+  color: var(--color-brand-text-soft);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.work-dialog-label {
+  margin-top: 10px;
+  color: var(--color-brand-crimson-bright);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.work-dialog-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.work-photo-slot {
+  position: relative;
+  display: flex;
+  aspect-ratio: 4 / 5;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border: 1px solid var(--color-brand-wine-light);
+  background: var(--color-brand-bg-dark);
+}
+
+.work-photo-slot > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-photo-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--color-brand-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.work-photo-empty svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-brand-crimson-bright);
+}
+
+.work-photo-actions {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: linear-gradient(transparent, rgba(18, 5, 8, 0.9));
+}
+
+.work-photo-actions label,
+.work-photo-actions button {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border: 1px solid rgba(248, 236, 228, 0.35);
+  background: rgba(18, 5, 8, 0.85);
+  color: var(--color-brand-text-warm);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.work-photo-actions label:hover,
+.work-photo-actions button:hover {
+  border-color: var(--color-brand-crimson-bright);
+  background: var(--color-brand-crimson);
+}
+
+.work-photo-actions label:focus-within,
+.work-photo-actions button:focus-visible {
+  outline: 2px solid var(--color-brand-crimson-bright);
+  outline-offset: 2px;
+}
+
+.work-photo-actions svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 1024px) {
+  .work-rail {
+    grid-auto-columns: calc((100% - 48px) / 3);
+  }
+}
+
+@media (max-width: 720px) {
+  .section-eyebrow {
+    font-size: 12px;
+  }
+
+  .section-title {
+    margin-top: 16px;
+    font-size: 54px;
+  }
+
+  .contact-title {
+    margin-top: 18px;
+    font-size: 48px;
+    white-space: nowrap;
+  }
+
+  .work-section {
+    padding: 72px 0;
+  }
+
+  .work-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .work-header-aside {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .work-header-aside p {
+    max-width: 330px;
+    text-align: left;
+  }
+
+  .work-arrows,
+  .work-rail-footer {
+    display: none;
+  }
+
+  .work-pager {
+    display: flex;
+    margin-top: 14px;
+  }
+
+  .work-rail {
+    grid-auto-columns: 282px;
+    gap: 14px;
+    margin-top: 20px;
+    margin-right: -20px;
+    padding-right: 20px;
+  }
+
+  .work-card {
+    height: 390px;
+  }
+
+  .work-card-title {
+    font-size: 21px;
+  }
+
+  .work-card-title.is-long {
+    font-size: 17px;
+  }
+
+  .work-dialog {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .work-dialog-cover {
+    min-height: 200px;
+    max-height: 240px;
+  }
+
+  .work-dialog-content {
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal.is-visible .work-card,
+  .work-dialog-backdrop,
+  .work-dialog {
+    animation: none;
+  }
+
+  .work-card,
+  .work-card-image,
+  .work-card-mark,
+  .work-card-cta svg,
+  .work-progress-track > span {
+    transition: none;
+  }
+
+  .work-card.is-active,
+  .work-card:focus-visible,
+  .work-card.is-active .work-card-image,
+  .work-card.is-active .work-card-mark,
+  .work-card.is-active .work-card-cta svg {
+    transform: none;
+  }
+}

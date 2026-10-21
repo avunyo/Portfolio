@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Volume2, VolumeX, Music, Compass } from "lucide-react";
+import { Volume2 } from "lucide-react";
 
-export default function AmbientSoundscape() {
+interface AmbientSoundscapeProps {
+  /** "onCream" for the cream nav bar, "onDark" for the dark mobile menu. */
+  tone?: "onCream" | "onDark";
+}
+
+export default function AmbientSoundscape({ tone = "onCream" }: AmbientSoundscapeProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.45);
   
@@ -147,28 +152,24 @@ export default function AmbientSoundscape() {
 
   return (
     <div 
-      className="flex items-center gap-2.5 bg-[#F5E8E0] px-3.5 py-1.5 border-l border-brand-wine-dark/25 select-none"
+      className={`flex items-center gap-2.5 select-none ${tone === "onCream" ? "text-brand-bg-deep" : "text-brand-text-warm"}`}
       id="soundscape-panel"
     >
       <button
         onClick={toggleSoundscape}
-        className="flex items-center gap-1.5 cursor-pointer text-brand-bg-deep hover:text-brand-crimson transition-colors"
+        className="flex items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 hover:text-brand-crimson transition-colors"
         title="Hintergrundklang ein- oder ausschalten"
         id="soundscape-toggle-btn"
       >
-        {isPlaying ? (
-          <Volume2 className="w-3.5 h-3.5 animate-pulse text-brand-crimson-bright font-black" />
-        ) : (
-          <VolumeX className="w-3.5 h-3.5" />
-        )}
-        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em]">
+        {isPlaying && <Volume2 className="w-3.5 h-3.5 animate-pulse text-brand-crimson-bright" />}
+        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.16em]">
           {isPlaying ? "TON AN" : "TON AUS"}
         </span>
       </button>
 
       {isPlaying && (
         <div className="flex items-center gap-1 animate-fade-in" id="soundscape-volume-container">
-          <span className="font-mono text-[8px] text-brand-bg-deep/60">LAUT</span>
+          <span className="font-mono text-[10px] opacity-60">LAUT</span>
           <input
             type="range"
             min="0"
